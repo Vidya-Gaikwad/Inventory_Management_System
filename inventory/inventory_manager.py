@@ -11,23 +11,12 @@ class InventoryManager:
         self.json_file_available = False # added new 
         self.product_data = {}
 
-    # def read_product_data(self):
-    #     '''objects can read complete database. This method displays complete database'''
-
-    #     if not self.database.exists():
-    #         raise FileNotFoundError
-    #     else:
-    #         with open(self.database, "r") as file:
-    #             self.product_data = json.load(file)
-    #             return self.product_data
-
-    # added new
     def read_product_data(self):
         '''Reads the product data from the JSON file.'''
         if not self.database.exists():
             print("Product catalog file does not exist. Returning an empty inventory.")
             return {}  # Return an empty dictionary if the file doesn't exist or self.product_data
-        
+
         try:
             with open(self.database, "r") as file:
                 self.json_file_available = True  # The file is available and has been read successfully.
@@ -36,7 +25,7 @@ class InventoryManager:
         except (json.JSONDecodeError, FileNotFoundError) as e:
             print(f"Error reading the file: {e}")
             return {}  # Return an empty dictionary in case of errors
-        
+
     def save_product(self):
         '''This method will be called to save changes made to database.
         Here changes to database are, like add_product, update_product'''
@@ -47,10 +36,11 @@ class InventoryManager:
     def add_product(self, product_id, product: Product):
         '''With this method, manager can add product of type Product to database'''
         self.product_data = self.read_product_data()
-        if self.validate_product(product_id, product):
-            self.product_data[product_id] = product.to_dict()
-            self.save_product()
-            print(f"Product '{product_id}' added successfully.")
+        if product_id not in self.product_data and self.valid_product_id(product_id):
+            if self.validate_product(product):
+                self.product_data[product_id] = product.to_dict()
+                self.save_product()
+                print(f"Product '{product_id}' added successfully.")
         else:
             print("Something went wrong, product cannot be added")
 
@@ -62,11 +52,14 @@ class InventoryManager:
             return False
         elif not (isinstance(updated_product, Product)):
             raise TypeError("updated_product must be of type 'Product'")
-        else:
+        elif self.validate_product(updated_product):
             # self.product_data[product_id] = vars(updated_product)
             data = updated_product.to_dict()
             self.product_data[product_id] = data
             self.save_product()
+            return True
+        else:
+            print("Something went wrong, product cannot be updated")
 
     def valid_product_id(self, product_id):
         '''Each product has a unique Id, which should follow given pattern'''
@@ -76,8 +69,7 @@ class InventoryManager:
             return True
         raise ValueError("Product ID must be a valid product ID.")
 
-    
-    def validate_product(self, product_id, product: Product):
+    def validate_product(self, product: Product):
         '''This methods validates product by checking: if name follows given pattern,
         if quantity, and price is of float type, and category is from the given list
         '''
@@ -87,24 +79,20 @@ class InventoryManager:
 
         category_list = ["Electronics", "electronics", "Furniture", "furniture", "Clothes", "clothes", "Footware", "footware"]
 
-        if product_id not in self.product_data and self.valid_product_id(product_id):
-            if not (isinstance(product, Product)):
-                raise TypeError("Type of product is not 'Product'")
-            # Makes sure quantity and quality is not zero 
-            elif not (product.product_name and product.quantity and product.price and product.category):
-                raise TypeError("Product can not be empty")
-            elif not (re.match(pattern, product.product_name)):
-                raise NameError("product_name does not follow required pattern")
-            elif product.category not in category_list:
-                raise NameError("Category not in list")
+        if not (isinstance(product, Product)):
+            raise TypeError("Type of product is not 'Product'")
+        # Makes sure quantity and quality is not zero 
+        elif not (product.product_name and product.quantity and product.price and product.category):
+            raise TypeError("Product can not be empty")
+        elif not (re.match(pattern, product.product_name)):
+            raise NameError("product_name does not follow required pattern")
+        elif product.category not in category_list:
+            raise NameError("Category not in list")
 
-            elif not ((isinstance(product.price, float)) and (isinstance(product.quantity, float))):
-                raise TypeError("price and quantity should be of type float")
-            else:
-                return True
+        elif not ((isinstance(product.price, float)) and (isinstance(product.quantity, float))):
+            raise TypeError("price and quantity should be of type float")
         else:
-            print("Product_id already exist")
-            return False
+            return True
 
     def search_product_by_name(self, product_name):
         self.product_data = self.read_product_data()
@@ -113,7 +101,8 @@ class InventoryManager:
             if product_name == product["product_name"]:
                 #print(product)
                 return product
-            
+        else:
+            return False
 
     def get_total_inventory_value(self):
         if not self.database:
