@@ -109,6 +109,7 @@ class InventoryManager:
             print("Error: The product catalog file is not available. Cannot calculate total inventory value.")
             return 0  # Return 0 since we can't calculate the total value 
         total_value = 0
+        self.product_data = self.read_product_data()
         for product_id, product in self.product_data.items():
             total_value += product["price"] * product["quantity"]
         return total_value
@@ -117,6 +118,7 @@ class InventoryManager:
         if not self.database:
             print("Error: The product catalog file is not available. Cannot remove product.")
             return
+        self.product_data = self.read_product_data()
         if product_id in self.product_data:
             del self.product_data[product_id]
             self.save_product()
