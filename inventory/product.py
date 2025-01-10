@@ -16,6 +16,7 @@ class Product:
         if self.database.exists():
             with open(self.database, "r") as file:
                 self.product_data = json.load(file)
+                print(self.product_data)
                 return self.product_data
         else:
             print("File not found. Returning empty data.")
@@ -29,7 +30,7 @@ class Product:
         # Find the product by name and update its quantity
         product_found = False
         for product_id, product_info in self.product_data.items():
-            if product_info["name"].lower() == self.product_name: 
+            if product_info["product_name"].lower() == self.product_name: 
                 self.product_data[product_id]["quantity"] = self.quantity
                 product_found = True
                 break
@@ -48,7 +49,7 @@ class Product:
         # Find the product by name and update its price
         product_found = False
         for product_id, product_info in self.product_data.items():
-            if product_info["name"].lower() == self.product_name: 
+            if product_info["product_name"].lower() == self.product_name: 
                 self.product_data[product_id]["price"] = self.price
                 product_found = True
                 break
@@ -92,3 +93,14 @@ class Product:
             "category": self.category
             }
         return data
+    
+
+
+product1 = Product("earphone", 10, 1000, "Electronics")
+product1.read_product_data()
+product1.display_product_info()
+product1.apply_discount(10)
+product1.update_quantity(20)
+product1.update_quantity(20)
+product1.update_price(5000)
+product1.to_dict()
