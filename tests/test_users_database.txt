@@ -1,0 +1,40 @@
+Documentation for TEST  USERS DATABASE 
+
+
+"""Custom error handling to test failures."""
+
+""" Fixtures to reduce redundancies and increase readability """
+
+# Create a temporary path fixture to test each file
+
+# Dictionary sample for users database
+
+# Initialize the USER DATABASE
+
+# Fixture for the expected email
+
+# Fixture for the expected last name
+
+"""Fixture to assert user data and handle errors"""
+
+""" Test CRUD operations for the users database using fixtures """
+
+# Test adding a user to the database
+
+"""Test adding a user to the database."""
+
+# Test reading from the database
+
+"""Test reading from the database."""
+
+# Test updating a user's data in the database
+
+"""Test updating a user's data in the database."""
+
+# Test deleting a user from the database
+
+"""Test deleting a user from the database."""
+
+# Test searching for a user by criteria in the database
+
+"""Test searching for a user by criteria in the database."""

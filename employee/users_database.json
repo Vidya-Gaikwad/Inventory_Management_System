@@ -1,0 +1,32 @@
+{
+    "_default": {
+        "1": {
+            "first_name": "Miguel",
+            "last_name": "Estrada",
+            "email": "Miguel@example.com",
+            "phone_number": "+1234567890",
+            "address": {
+                "street": "123 Main St",
+                "house_number": "5A",
+                "city": "New York"
+            },
+            "birthday": "25/05/1995",
+            "hiring_date": "10/03/2024",
+            "salary": 38500.0
+        },
+        "2": {
+            "first_name": "Leon",
+            "last_name": "Camarena",
+            "email": "Camarene@example.com",
+            "phone_number": "+1234567891",
+            "address": {
+                "street": "1235 Main St",
+                "house_number": "6A",
+                "city": "New York"
+            },
+            "birthday": "20/06/1995",
+            "hiring_date": "11/03/2024",
+            "salary": 58500.0
+        }
+    }
+}

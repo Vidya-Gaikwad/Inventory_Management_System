@@ -1,0 +1,21 @@
+Documentation for USERS DATABASE 
+
+""" Module manages all the interactions with the JSON file users_data.json """
+
+"""Custom error handling for UserDatabase operations."""
+
+"""Class to manage user interactions with a JSON file."""
+
+"""Ensure the JSON file exists and is initialized properly."""
+
+"""Read data from the JSON file."""
+
+"""Write data to the JSON file."""
+
+"""Add a new user to the database."""
+
+"""Update an existing user's data."""
+
+"""Delete a user from the database."""
+
+"""Search for a user by given criteria."""
