@@ -55,3 +55,14 @@ class Login:
 
         print("Too many failed login attempts. Try again later.")
         return False
+
+
+class ManagerAccessControl:
+    def __init__(self, user_data):
+        self.user_data = user_data
+
+    def can_crud(self):
+        """Check if the logged-in user has CRUD permissions (Manager only)."""
+        if self.user_data.get("role") == "Manager":
+            return True
+        return False
