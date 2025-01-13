@@ -8,7 +8,7 @@ class InventoryManager:
     ''' This class provides objects for management, ie "manager" of inventory'''
     def __init__(self, file_path="product_catalog.json"):
         self.database = Path(file_path)
-        self.json_file_available = False # added new 
+        self.json_file_available = False  # added new
         self.product_data = {}
 
     def read_product_data(self):
@@ -96,9 +96,9 @@ class InventoryManager:
     def search_product_by_name(self, product_name):
         self.product_data = self.read_product_data()
         for product_id, product in self.product_data.items():
-            #if product_name == self.product_data[product_id]["product_name"]:
+            # if product_name == self.product_data[product_id]["product_name"]:
             if product_name == product["product_name"]:
-                #print(product)
+                # print(product)
                 return product
         else:
             return False
@@ -137,14 +137,24 @@ class InventoryManager:
         try:
             category = input("Please enter category: 1- Electronics, 2- Furniture, 3- Footware:  ")
             if category == "1":
-                filtered_category = list(filter(lambda x : x[1]["category"] == "Electronics", self.product_data.items()))
+                filtered_category = list(filter(lambda x: x[1]["category"] == "Electronics", self.product_data.items()))
                 result = filtered_category
             elif category == "2":
-                filtered_category = list(filter(lambda x : x[1]["category"] == "Furniture", self.product_data.items()))
+                filtered_category = list(filter(lambda x: x[1]["category"] == "Furniture", self.product_data.items()))
                 result = filtered_category
             return result
         except Exception as e:
             print(f"Error: {e}")
+
+    def filter_product_with_low_quantity(self):
+        self.product_data = self.read_product_data()
+        products_with_minimum_quantity = list(filter(lambda x: x[1]["quantity"] < 5, self.product_data.items()))
+        result = products_with_minimum_quantity
+        print(result)
+        if len(result) > 0:
+            return result
+        else: 
+            print("All products have quantity more than minimum required!!")
 
 
 # manager = InventoryManager()
