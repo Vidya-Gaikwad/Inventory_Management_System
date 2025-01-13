@@ -88,7 +88,6 @@ class InventoryManager:
             raise NameError("product_name does not follow required pattern")
         elif product.category not in category_list:
             raise NameError("Category not in list")
-
         elif not ((isinstance(product.price, float)) and (isinstance(product.quantity, float))):
             raise TypeError("price and quantity should be of type float")
         else:
@@ -127,10 +126,25 @@ class InventoryManager:
             print(f"Product with ID {product_id} not found.")
 
     def filter_product_by_price(self):
-        pass
+        self.product_data = self.read_product_data()
+        print("products will be filtered between 0 and price provided")
+        price = float(input("Please enter your price: "))
+        filtered = list(filter(lambda x: x[1]["price"] < price, self.product_data.items()))
+        return filtered
 
     def filter_product_by_category(self):
-        pass
+        self.product_data = self.read_product_data()
+        try:
+            category = input("Please enter category: 1- Electronics, 2- Furniture, 3- Footware:  ")
+            if category == "1":
+                filtered_category = list(filter(lambda x : x[1]["category"] == "Electronics", self.product_data.items()))
+                result = filtered_category
+            elif category == "2":
+                filtered_category = list(filter(lambda x : x[1]["category"] == "Furniture", self.product_data.items()))
+                result = filtered_category
+            return result
+        except Exception as e:
+            print(f"Error: {e}")
 
 
 # manager = InventoryManager()
