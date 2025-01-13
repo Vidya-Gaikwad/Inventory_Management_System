@@ -12,54 +12,48 @@ class Product:
         self.product_data = {}
 
     def read_product_data(self):
-        # Read the data from the JSON file
-        if self.database.exists():
+        # Read complete database
+
+        if not self.database.exists():
+            raise FileNotFoundError
+        else:
             with open(self.database, "r") as file:
                 self.product_data = json.load(file)
-                print(self.product_data)
                 return self.product_data
-        else:
-            print("File not found. Returning empty data.")
-            return {}
 
 
     def update_quantity(self, added_quantity):
+        self.product_data = self.read_product_data()
         # Update the quantity of the product
-        self.quantity += added_quantity
 
         # Find the product by name and update its quantity
         product_found = False
         for product_id, product_info in self.product_data.items():
-            if product_info["product_name"].lower() == self.product_name: 
-                self.product_data[product_id]["quantity"] = self.quantity
+            if product_info["product_name"] == self.product_name: 
+                self.product_data[product_id]["quantity"] += added_quantity
                 product_found = True
-                break
-        
-        
+                self.save_product_data()
+                return self.product_data[product_id]["quantity"]
         if not product_found:
             print(f"Product '{self.product_name}' not found in the catalog.")
-            return 
-
-        # Save the updated product data back to the JSON file
-        self.save_product_data()
+            return
 
     def update_price(self, new_price):
+    # Update the price of the product
+        self.product_data = self.read_product_data()
         self.price = new_price
 
-        # Find the product by name and update its price
         product_found = False
         for product_id, product_info in self.product_data.items():
-            if product_info["product_name"].lower() == self.product_name: 
+            if product_info["product_name"].lower() == self.product_name.lower():
                 self.product_data[product_id]["price"] = self.price
                 product_found = True
                 break
-        
-        
+
         if not product_found:
             print(f"Product '{self.product_name}' not found in the catalog.")
-            return  
+            return
 
-        # Save the updated product data back to the JSON file
         self.save_product_data()
 
 
