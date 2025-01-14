@@ -1,4 +1,6 @@
+# validate_user.py
 from cerberus import Validator
+import datetime
 
 
 class ValidationError(Exception):
@@ -14,12 +16,12 @@ class UserValidator:
         self.schema = {
             "first_name": {
                 "type": "string",
-                "regex": r"^[a-zA-ZÀ-ÿ]+(?: [a-zA-ZÀ-ÿ]+)*$",
+                "regex": r"^[a-zA-ZÀ-ÿ\s]+$",
                 "required": True,
             },
             "last_name": {
                 "type": "string",
-                "regex": r"^[a-zA-ZÀ-ÿ]+(?: [a-zA-ZÀ-ÿ]+)*$",
+                "regex": r"^[a-zA-ZÀ-ÿ\s]+$",
                 "required": True,
             },
             "email": {
