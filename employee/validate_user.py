@@ -77,12 +77,20 @@ class UserValidator:
         self.validator = Validator(self.schema)
 
     def validate(self, data):
-        """Validate data against the schema."""
-        if not self.validator.validate(data):
-            raise ValidationError(self.validator.errors)
-        # Additional custom validation
-        self.validate_birthday(data.get("birthday"))
-        return data
+        """Validate data against the schema and prompt for invalid fields."""
+        valid_data = data.copy()
+        errors = self.validator.validate(data)
+        if not errors:
+            # All fields are valid, check custom validations
+            self.validate_birthday(valid_data.get("birthday"))
+            return valid_data
+
+        # If there are errors, give user-friendly feedback and reprompt invalid fields
+        for field, error_list in self.validator.errors.items():
+            for error in error_list:
+                print(f"Error with {field}: {self.get_error_message(field, error)}")
+                valid_data[field] = self.prompt_for_field(field, valid_data)
+        return valid_data
 
     def validate_birthday(self, birthday):
         """Validate birthday to ensure user is at least 18 years old."""
@@ -98,29 +106,62 @@ class UserValidator:
                 raise ValidationError("User must be at least 18 years old.")
         except ValueError:
             raise ValidationError("Invalid birthday format. Use DD/MM/YYYY.")
-        return birthday
+
+    def get_error_message(self, field, error):
+        """Provide a user-friendly error message based on the field and error."""
+        messages = {
+            "first_name": "First name should only contain letters and spaces.",
+            "last_name": "Last name should only contain letters and spaces.",
+            "email": "Email must follow the format: example@domain.com.",
+            "password": (
+                "Password must be at least 8 characters long, include at least one uppercase letter, "
+                "one lowercase letter, and one digit."
+            ),
+            "phone_number": "Phone number must be in a valid format, such as +1234567890.",
+            "birthday": "Birthday must be in the format DD/MM/YYYY.",
+            "address.street": "Street name should only contain letters, numbers, and spaces.",
+            "address.house_number": "House number can contain numbers and letters.",
+            "address.city": "City name should only contain letters and spaces.",
+            "address.country": "Country name should only contain letters and spaces.",
+            "address.zip_code": "ZIP code must contain 5-8 digits.",
+        }
+        return messages.get(f"{field}", error)
+
+    def prompt_for_field(self, field, data):
+        """Prompt user for input for the field if invalid, using the current data."""
+        while True:
+            input_value = input(f"Enter a valid {field}: ").strip()
+            # Update the input in the data dictionary and validate
+            data[field] = input_value
+            try:
+                self.validate(data)
+                return input_value
+            except ValidationError:
+                print(f"Please enter a valid value for {field}.")
+                continue
 
 
-# if __name__ == "__main__":
-#    user_data = {
-#        "first_name": "Miguel",
-#        "last_name": "Estrada",
-#        "email": "Miguel@example.com",
-#        "password": "StrongPass1",
-#        "phone_number": "+1234567890",
-#        "address": {
-#            "street": "123 Main St",
-#            "house_number": "5A",
-#            "city": "New York",
-#            "country": "USA",
-#            "zip_code": "10001",
-#        },
-#        "birthday": "25/05/1995",
-#    }
+# Example usage:
 
-#    validator = UserValidator()
-#    try:
-#        validated_user = validator.validate(user_data)
-#        print("User data is valid.")
-#    except ValidationError as e:
-#        print(f"Validation failed: {e}")
+#user_data = {
+#    "first_name": "Miguel",
+#    "last_name": "Estrada",
+#    "email": "Miguel@example.com",
+#    "password": "StrongPass1",
+#    "phone_number": "+1234567890",
+#    "address": {
+#        "street": "123 Main St",
+#        "house_number": "5A",
+#        "city": "New York",
+#        "country": "USA",
+#        "zip_code": "10001",
+#    },
+#    "birthday": "25/05/1995",
+#}
+
+#validator = UserValidator()
+#try:
+#    validated_user = validator.validate(user_data)
+#    print("User data is valid.")
+#except ValidationError as e:
+#    print(f"Validation failed: {e}")
