@@ -32,6 +32,10 @@ class Login:
                 if self.validate_password(password, user["password"]):
                     return True
         return False
+    
+    def password_recovery(self, email)
+    print("We sent a password recovery to your email address")
+    
 
     def login(self):
         """

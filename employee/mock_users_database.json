@@ -1,1 +1,22 @@
-[]
+{
+    "juan.perez@example.com": {
+        "first_name": "Juan",
+        "last_name": "Pérez",
+        "email": "juan.perez@example.com",
+        "password": "$2b$12$6mYyRz1dL1H0M6lXFcU3uEmjlsVQJ4dV93y7gm1Zy3.E0fs31yXE6",  # hashed password
+        "role": "Manager",
+        "phone_number": "555-1234",
+        "address": "Calle Ficticia 123, Ciudad de México, CDMX",
+        "birthday": "15/05/1990"
+    },
+    "santos@example.com": {
+        "first_name": "Carlos",
+        "last_name": "Santos",
+        "email": "santos@example.com",
+        "password": "$2b$12$6mYyRz1dL1H0M6lXFcU3uEmjlsVQJ4dV93y7gm1Zy3.E0fs31yXE6",  # hashed password
+        "role": "Logistics Administrator",
+        "phone_number": "555-6789",
+        "address": "Calle Ficticia 456, Ciudad de México, CDMX",
+        "birthday": "20/06/1992"
+    }
+}
