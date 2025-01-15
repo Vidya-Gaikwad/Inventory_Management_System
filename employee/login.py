@@ -1,4 +1,6 @@
 import bcrypt
+import base64
+from users_database import UserManager
 
 
 class Login:
@@ -7,15 +9,15 @@ class Login:
     def __init__(self, user_manager):
         self.user_manager = user_manager
 
-    def hash_password(self, password):
-        """Hash a password using bcrypt."""
-        salt = bcrypt.gensalt()
-        return bcrypt.hashpw(password.encode(), salt)
-
     def validate_password(self, input_password, stored_hashed_password):
         """
         Validate the input password by comparing its hash with the stored hash.
+        Ensure both inputs are byte objects before passing to bcrypt.
         """
+        # Decode the base64 encoded stored hashed password to bytes
+        stored_hashed_password = base64.b64decode(stored_hashed_password)
+
+        # Validate the password using bcrypt
         return bcrypt.checkpw(input_password.encode(), stored_hashed_password)
 
     def validate_email_password(self, email, password):

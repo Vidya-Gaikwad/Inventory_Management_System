@@ -1,5 +1,6 @@
 from validate_user import UserValidator, ValidationError
 import bcrypt
+import base64
 
 
 class Registration:
@@ -31,10 +32,11 @@ class Registration:
         }
 
     def hash_password(self, password):
-        """Hash a password using bcrypt and convert to string (UTF-8)."""
+        """Hash a password using bcrypt and convert to base64 string."""
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
-        return hashed_password.decode("utf-8")  # Convert bytes to string (UTF-8)
+        # Convert the hashed password to base64 and return as a string
+        return base64.b64encode(hashed_password).decode("utf-8")
 
     def validate_fields(self, user_data):
         """Validate user input fields individually."""
