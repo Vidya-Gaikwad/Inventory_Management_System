@@ -1,3 +1,6 @@
+# This module 'inventory_manager.py' is a part of 'Inventory Management System' Projects
+# This module handles operations related to managing inventory which consists of different products
+
 import json
 from pathlib import Path
 from inventory.product import Product
@@ -6,13 +9,15 @@ import re
 
 class InventoryManager:
     ''' This class provides objects for management, ie "manager" of inventory'''
+
     def __init__(self, file_path="product_catalog.json"):
         self.database = Path(file_path)
-        self.json_file_available = False  # added new
+        self.json_file_available = False
         self.product_data = {}
 
     def read_product_data(self):
         '''Reads the product data from the JSON file.'''
+
         if not self.database.exists():
             print("Product catalog file does not exist. Returning an empty inventory.")
             return {}  # Return an empty dictionary if the file doesn't exist or self.product_data
@@ -33,19 +38,23 @@ class InventoryManager:
         with open(self.database, "w") as file:
             json.dump(self.product_data, file, indent=4)
 
-    def add_product(self, product_id, product: Product):
+    def add_product(self, product_id: str, product: Product):
         '''With this method, manager can add product of type Product to database'''
+
         self.product_data = self.read_product_data()
         if product_id not in self.product_data and self.valid_product_id(product_id):
             if self.validate_product(product):
                 self.product_data[product_id] = product.to_dict()
                 self.save_product()
-                print(f"Product '{product_id}' added successfully.")
+                print("\n")
+                print(f"Product with '{product_id}' added successfully.")
+                print("\n")
         else:
             print("Something went wrong, product cannot be added")
 
-    def update_product(self, product_id, updated_product: Product):
+    def update_product(self, product_id: str, updated_product: Product):
         '''With this method already present product in daabase can be modified/updated'''
+
         self.product_data = self.read_product_data()
         if product_id not in self.product_data:
             print(f"There is no product with given product_id '{product_id}'")
@@ -61,7 +70,7 @@ class InventoryManager:
         else:
             print("Something went wrong, product cannot be updated")
 
-    def valid_product_id(self, product_id):
+    def valid_product_id(self, product_id: str):
         '''Each product has a unique Id, which should follow given pattern'''
 
         pattern = r"^[A-Z]\d{3}$"
@@ -93,27 +102,32 @@ class InventoryManager:
         else:
             return True
 
-    def search_product_by_name(self, product_name):
+    def search_product_by_name(self, product_name: str):
+        ''' This method searches product in "product_catalog.json" by name of product'''
+
         self.product_data = self.read_product_data()
         for product_id, product in self.product_data.items():
-            # if product_name == self.product_data[product_id]["product_name"]:
             if product_name == product["product_name"]:
-                # print(product)
                 return product
         else:
             return False
 
     def get_total_inventory_value(self):
+        ''' This method provides total value of inventory '''
+
         if not self.database:
             print("Error: The product catalog file is not available. Cannot calculate total inventory value.")
             return 0  # Return 0 since we can't calculate the total value 
-        total_value = 0
+        total_value: float = 0.0
         self.product_data = self.read_product_data()
         for product_id, product in self.product_data.items():
             total_value += product["price"] * product["quantity"]
         return total_value
 
-    def remove_product(self, product_id):
+    def remove_product(self, product_id: str):
+        ''' This method removes a product from inventory, when given correct product_id.
+        And also updates 'product_catalog.json'
+        '''
         if not self.database:
             print("Error: The product catalog file is not available. Cannot remove product.")
             return
@@ -126,6 +140,8 @@ class InventoryManager:
             print(f"Product with ID {product_id} not found.")
 
     def filter_product_by_price(self):
+        ''' This method filters product by price (between 0 and given price)'''
+
         self.product_data = self.read_product_data()
         print("products will be filtered between 0 and price provided")
         price = float(input("Please enter your price: "))
@@ -133,37 +149,35 @@ class InventoryManager:
         return filtered
 
     def filter_product_by_category(self):
+        ''' This method filters product by category. 
+        User needs to type numbers like 1, 2..ect corresponding to category
+        '''
         self.product_data = self.read_product_data()
         try:
-            category = input("Please enter category: 1- Electronics, 2- Furniture, 3- Footware:  ")
+            category = input("Please enter category: type '1'- Electronics, type '2'- Furniture, type '3'- Footware, type '4'- Clothes:  ")
             if category == "1":
                 filtered_category = list(filter(lambda x: x[1]["category"] == "Electronics", self.product_data.items()))
                 result = filtered_category
             elif category == "2":
                 filtered_category = list(filter(lambda x: x[1]["category"] == "Furniture", self.product_data.items()))
                 result = filtered_category
+            elif category == "3":
+                filtered_category = list(filter(lambda x: x[1]["category"] == "Footware", self.product_data.items()))
+                result = filtered_category
+            elif category == "4":
+                filtered_category = list(filter(lambda x: x[1]["category"] == "Clothes", self.product_data.items()))
+                result = filtered_category
             return result
         except Exception as e:
             print(f"Error: {e}")
 
     def filter_product_with_low_quantity(self):
+        ''' This method provides list of products with low available quantity (below 5)'''
+
         self.product_data = self.read_product_data()
         products_with_minimum_quantity = list(filter(lambda x: x[1]["quantity"] < 5, self.product_data.items()))
         result = products_with_minimum_quantity
-        print(result)
         if len(result) > 0:
             return result
-        else: 
+        else:
             print("All products have quantity more than minimum required!!")
-
-
-# manager = InventoryManager()
-# manager.read_product_data()
-# product = Product("TV", 500.0, 10, "Electronics")
-# manager.add_product("E102", product)
-
-
-# product1 = Product("TV",500.00, 10, "Electronics")
-# person = InventoryManager()
-# person.read_product_data()
-# person.add_product((product1))
