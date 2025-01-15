@@ -145,59 +145,6 @@ def access_inventory(inventory_manager):
             else:
                 print(f"Product ID '{product_id}' not found.")
 
-
-        # elif choice == "8":  # Apply Discount
-        #     product_id = input("Enter product ID to apply discount: ")
-        #     discount = float(input("Enter discount percentage: "))
-        #     inventory_manager.read_product_data()  # Ensure product data is updated
-        #     print(f"Current product data: {inventory_manager.product_data}")  # Debugging output
-        #     product_data = inventory_manager.product_data.get(product_id)
-        #     if product_data:
-        #         # Debugging: Confirm product data
-        #         print(f"Found product: {product_data}")
-        #         # Create a Product instance from the dictionary data
-        #         product = Product(
-        #             product_name=product_data["product_name"],
-        #             quantity=product_data["quantity"],
-        #             price=product_data["price"],
-        #             category=product_data["category"]
-        #         )
-        #         product.apply_discount(discount)
-
-        #         # Update the product in inventory
-        #         inventory_manager.update_product(product_id, product)
-        #         print(f"Discount applied to product '{product_id}'. New price: ${product.price:.2f}")
-        #     else:
-        #         print(f"Product ID '{product_id}' not found.")
-
-        # elif choice == "8":  # Apply Discount
-        #     product_id = input("Enter product ID to apply discount: ")
-        #     discount = float(input("Enter discount percentage: "))
-        #     inventory_manager.read_product_data()  # Ensure product data is updated
-        #     product_data = inventory_manager.product_data.get(product_id)
-        #     if product_data:
-        #         # Create a Product instance from the dictionary data
-        #         product = Product(
-        #             product_name=product_data["product_name"],
-        #             quantity=product_data["quantity"],
-        #             price=product_data["price"],
-        #             category=product_data["category"]
-        #         )
-        #         product.apply_discount(discount)
-
-        #         # Update the product in inventory
-        #         inventory_manager.update_product(product_id, product)
-        #         print(f"Discount applied to product '{product_id}'. New price: ${product.price:.2f}")
-        #     else:
-        #         print(f"Product ID '{product_id}' not found.")
-            # discount = float(input("Enter discount percentage: "))
-            # product = inventory_manager.product_data.get(product_id)
-            # if product:
-            #     product.apply_discount(discount)
-            #     print(f"Discount applied to product '{product_id}'. New price: ${product.price:.2f}")
-            # else:
-            #     print(f"Product ID '{product_id}' not found.")
-
         elif choice == "9":  # Filter products by price
             filtered_products = inventory_manager.filter_product_by_price()
             if filtered_products:
