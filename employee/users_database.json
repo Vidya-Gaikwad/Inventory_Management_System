@@ -1,8 +1,8 @@
 [
     {
-        "first_name": "Juan",
-        "last_name": "P\u00e9rez",
-        "email": "juan.perez@example.com",
+        "first_name": "Carla",
+        "last_name": "Perez",
+        "email": "carla@example.com",
         "password": "$2b$12$EbtlICtDHB8VEN8O.ly.GObuPM00idWEs9cl/G7pg1Qr3ivz9717i",
         "role": "Manager",
         "phone_number": "555-1234",
@@ -11,7 +11,7 @@
     },
     {
         "first_name": "Pedro",
-        "last_name": "P\u00e9rez",
+        "last_name": "Perez",
         "email": "perez@example.com",
         "password": "$2b$12$jsJiILe9OZGVy9KqCmQTXOKmhuqboTKmgWWL/VVP4oO2.4hAiGO6W",
         "role": "Manager",
@@ -38,5 +38,15 @@
         "phone_number": "555-8765",
         "address": "Calle Falsa 456, Ciudad de M\u00e9xico, CDMX",
         "birthday": "25/03/1992"
+    },
+    {
+        "first_name": "Juan",
+        "last_name": "P\u00e9rez",
+        "email": "juan.perez@example.com",
+        "password": "$2b$12$8wyOlAbM1rApVZ2OkuUgS.ixaNFmW4O23TjjiMAi5wqKnB962WnHu",
+        "role": "Manager",
+        "phone_number": "555-1234",
+        "address": "Calle Ficticia 123, Ciudad de M\u00e9xico, CDMX",
+        "birthday": "15/05/1990"
     }
 ]

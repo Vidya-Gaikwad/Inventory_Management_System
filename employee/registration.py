@@ -56,6 +56,12 @@ class Registration:
         if user_data is None:
             user_data = self.prompt_user_input()  # Prompt if no data is provided
 
+        # Validate user data
+        failed_field = self.validate_fields(user_data)
+        if failed_field:
+            print(f"Validation failed for field: {failed_field}")
+            return False
+
         # Hash the password and update the validated user data
         user_data["password"] = self.hash_password(user_data["password"])
 

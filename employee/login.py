@@ -1,6 +1,4 @@
 import bcrypt
-from users_database import UserManager
-from validate_user import ValidationError
 
 
 class Login:
@@ -18,7 +16,6 @@ class Login:
         """
         Validate the input password by comparing its hash with the stored hash.
         """
-        # bcrypt will handle the hashing and comparison internally
         return bcrypt.checkpw(input_password.encode(), stored_hashed_password)
 
     def validate_email_password(self, email, password):
@@ -34,7 +31,8 @@ class Login:
         return False
 
     def password_recovery(self, email):
-        print("We sent a password recovery to your email address")
+        """Simulate sending a password recovery email."""
+        print(f"We sent a password recovery link to {email}.")
 
     def login(self):
         """
@@ -57,15 +55,4 @@ class Login:
                 )
 
         print("Too many failed login attempts. Try again later.")
-        return False
-
-
-class ManagerAccessControl:
-    def __init__(self, user_data):
-        self.user_data = user_data
-
-    def can_crud(self):
-        """Check if the logged-in user has CRUD permissions (Manager only)."""
-        if self.user_data.get("role") == "Manager":
-            return True
         return False
