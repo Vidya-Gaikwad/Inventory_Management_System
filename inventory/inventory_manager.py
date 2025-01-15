@@ -47,7 +47,7 @@ class InventoryManager:
                 self.product_data[product_id] = product.to_dict()
                 self.save_product()
                 print("\n")
-                print(f"Product with '{product_id}' added successfully.")
+                print(f"Product with ID '{product_id}' added successfully.")
                 print("\n")
         else:
             print("Something went wrong, product cannot be added")
@@ -154,7 +154,7 @@ class InventoryManager:
         '''
         self.product_data = self.read_product_data()
         try:
-            category = input("Please enter category: type '1'- Electronics, type '2'- Furniture, type '3'- Footware, type '4'- Clothes:  ")
+            category = input("Please enter your option for category\n1 -Electronics \n2 -Furniture \n3 -Footware \n4 -Clothes\nCategory: ").strip()
             if category == "1":
                 filtered_category = list(filter(lambda x: x[1]["category"] == "Electronics", self.product_data.items()))
                 result = filtered_category
