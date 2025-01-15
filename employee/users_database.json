@@ -1,0 +1,62 @@
+{
+    "_default": {
+        "1": {
+            "first_name": "Miguel",
+            "last_name": "Estrada",
+            "email": "Miguel@example.com",
+            "phone_number": "+1234567890",
+            "address": {
+                "street": "123 Main St",
+                "house_number": "5A",
+                "city": "New York"
+            },
+            "birthday": "25/05/1995",
+            "hiring_date": "10/03/2024",
+            "salary": 38500.0
+        },
+        "2": {
+            "first_name": "Leon",
+            "last_name": "Camarena",
+            "email": "Camarene@example.com",
+            "phone_number": "+1234567891",
+            "address": {
+                "street": "1235 Main St",
+                "house_number": "6A",
+                "city": "New York"
+            },
+            "birthday": "20/06/1995",
+            "hiring_date": "11/03/2024",
+            "salary": 58500.0
+        },
+        "3": {
+            "first_name": "Eli",
+            "last_name": "Eli",
+            "birthday": "21.11.1978",
+            "email": "test@test.com",
+            "password": "$2b$12$SV810zb0GxNrsUsqBV0B/.x8BTAqMI8FSPwwJfUA7AyTqWpxxAbEW",
+            "phone_number": "+2938473847",
+            "address": {
+                "street": "Haupt",
+                "house_number": "2",
+                "city": "Berlin",
+                "zip_code": "23243",
+                "country": "Germany"
+            }
+        },
+        "4": {
+            "first_name": "Eva",
+            "last_name": "Kent",
+            "birthday": "11.07.1967",
+            "email": "test1@test1.com",
+            "password": "$2b$12$v9gXZhIiPxEZZe6TvcYwouflBwKNOzXWPIVAAc9Hk4dS4i6Bf9ga6",
+            "phone_number": "+34353535333",
+            "address": {
+                "street": "Gerll",
+                "house_number": "2",
+                "city": "Berlin",
+                "zip_code": "35232",
+                "country": "Germany"
+            }
+        }
+    }
+}
