@@ -1,0 +1,50 @@
+{
+    "E100": {
+        "product_name": "TV",
+        "quantity": 75.0,
+        "price": 315.0,
+        "category": "Electronics"
+    },
+    "E200": {
+        "product_name": "TV-Samsung",
+        "quantity": 20.0,
+        "price": 625.0,
+        "category": "Electronics"
+    },
+    "E300": {
+        "product_name": "iphone_11",
+        "quantity": 40.0,
+        "price": 450.0,
+        "category": "Electronics"
+    },
+    "E400": {
+        "product_name": "iphone_13",
+        "quantity": 10.0,
+        "price": 320.0,
+        "category": "Electronics"
+    },
+    "E600": {
+        "product_name": "laptop",
+        "quantity": 40.0,
+        "price": 520.0,
+        "category": "Electronics"
+    },
+    "E101": {
+        "product_name": "samsung_1",
+        "quantity": 25.0,
+        "price": 300.0,
+        "category": "Electronics"
+    },
+    "E205": {
+        "product_name": "iphone_19",
+        "quantity": 25.0,
+        "price": 350.0,
+        "category": "Electronics"
+    },
+    "E203": {
+        "product_name": "Tv_10",
+        "quantity": 20.0,
+        "price": 500.0,
+        "category": "Electronics"
+    }
+}
