@@ -1,5 +1,5 @@
-from tinydb import TinyDB, Query
 import json
+from pathlib import Path
 
 
 class UserNotFoundError(Exception):
@@ -12,122 +12,100 @@ class UserExistsError(Exception):
 
 class UserManager:
     def __init__(self, db_path="users_database.json"):
-        self.db = TinyDB(db_path)
-        self.user_query = Query()
-        self.db_path = db_path  # Store the database path explicitly
+        self.db_path = Path(db_path)  # Use pathlib for path handling
+        self._ensure_db_exists()  # Ensure the file exists when initializing
+
+    def _ensure_db_exists(self):
+        """Ensure that the database file exists. If not, create it with an empty list."""
+        if not self.db_path.exists():
+            with open(self.db_path, "w") as db_file:
+                json.dump([], db_file, indent=4)
+        else:
+            # Ensure the file contains a list and not malformed data
+            with open(self.db_path, "r") as db_file:
+                try:
+                    data = json.load(db_file)
+                    if not isinstance(data, list):
+                        raise ValueError("Database file is not a valid list.")
+                except (json.JSONDecodeError, ValueError) as e:
+                    print(f"Error: {e}")
+                    print("Resetting database to empty list.")
+                    with open(self.db_path, "w") as db_file:
+                        json.dump([], db_file, indent=4)
+
+    def _load_db(self):
+        """Load the database from the file."""
+        with open(self.db_path, "r") as db_file:
+            return json.load(db_file)
+
+    def _save_db(self, db_data):
+        """Save the database to the file."""
+        with open(self.db_path, "w") as db_file:
+            json.dump(db_data, db_file, indent=4)
 
     def get_all_users(self):
         """Get all users from the database."""
-        return self.db.all()
+        return self._load_db()
 
     def find_user(self, email):
         """Find a user by email."""
-        result = self.db.search(self.user_query.email == email)
-        return result[0] if result else None
+        users = self._load_db()
+        return next((user for user in users if user["email"] == email), None)
 
     def add_user(self, user_data):
         """Add a new user to the database."""
-        if self.find_user(user_data["email"]):
-            raise UserExistsError(f"User with email {user_data['email']} already exists.")
-        self.db.insert(user_data)
-        # Reformat the file after adding the user (pretty printing)
-        self._pretty_print_db()
-        return "User added successfully."
+        try:
+            if self.find_user(user_data["email"]):
+                raise UserExistsError(
+                    f"User with email {user_data['email']} already exists."
+                )
+
+            users = self._load_db()
+            users.append(user_data)
+            self._save_db(users)
+            return "User added successfully."
+
+        except Exception as e:
+            print(f"Error adding user: {e}")
+            raise
 
     def update_user(self, email, update_data):
         """Update an existing user's information."""
-        if not self.find_user(email):
+        users = self._load_db()
+        user = self.find_user(email)
+
+        if not user:
             raise UserNotFoundError(f"User with email {email} not found.")
-        self.db.update(update_data, self.user_query.email == email)
-        # Reformat the file after updating the user (pretty printing)
-        self._pretty_print_db()
+
+        # Update the user data
+        for key, value in update_data.items():
+            user[key] = value
+
+        self._save_db(users)
         return "User updated successfully."
 
     def delete_user(self, email):
         """Delete a user by email."""
-        if not self.find_user(email):
+        users = self._load_db()
+        user = self.find_user(email)
+
+        if not user:
             raise UserNotFoundError(f"User with email {email} not found.")
-        self.db.remove(self.user_query.email == email)
-        # Reformat the file after deleting the user (pretty printing)
-        self._pretty_print_db()
+
+        users.remove(user)
+        self._save_db(users)
         return "User deleted successfully."
-
-    def _pretty_print_db(self):
-        """Reformat the TinyDB storage to have pretty print with newlines."""
-        with open(self.db_path, 'r') as f:  # Use the stored db_path
-            db_data = json.load(f)
-
-        # Open the file again for writing with pretty print and indent
-        with open(self.db_path, 'w') as f:
-            json.dump(db_data, f, indent=4)
 
     def search_users(self, criteria):
         """Search for users matching given criteria."""
-        results = self.db.search(
-            lambda user: all(user.get(key) == value for key, value in criteria.items())
-        )
+        users = self._load_db()
+        results = [
+            user
+            for user in users
+            if all(user.get(key) == value for key, value in criteria.items())
+        ]
+
         if not results:
             raise UserNotFoundError("No users matching the given criteria were found.")
+
         return results
-
-
-
-# user_manager = UserManager()
-
-# Add a user
-# user_data = {
-#  "first_name": "Carlos",
-# "last_name": "Ramirez",
-#  "birthday": "01.01.1990",
-#  "email": "Carlos@example.com",
-#  "password": "password123",
-#  "phone_number": "+1 1234567890",
-#  "address": {
-#      "street": "123 Main St",
-#      "house_number": "123",
-#      "city": "New York",
-#      "zip_code": "10001",
-#      "country": "USA",
-#  },
-# }
-
-# print(user_data)
-
-
-# user_manager.add_user(user_data)
-
-# Update a user's information
-# update_data = {
-#    "first_name": "Carlos",
-#    "last_name": "Ramirez",
-#    "birthday": "02.02.1990",
-#    "email": "Carlos@example.com",
-#    "password": "newpassword456",
-#    "phone_number": "+1 9876543210",
-#    "address": {
-#        "street": "456 Elm St",
-#        "house_number": "456",
-#        "city": "Los Angeles",
-#        "zip_code": "90001",
-#        "country": "USA",
-#    },
-# }
-
-# user_manager.update_user(user_data["email"], update_data)
-
-# print(update_data)
-
-# Delete a user
-# delete_user = user_manager.delete_user(user_data["email"])
-
-# print(delete_user)
-
-# Search for users
-# criteria = {"first_name": "Carlos"}
-
-# try:
-#    users = user_manager.search_users(criteria)
-#    for user in users:
-#        print(user)
-# except Exception as e:
-#    print(e)

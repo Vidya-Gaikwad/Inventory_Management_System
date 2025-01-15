@@ -1,14 +1,12 @@
 from registration import Registration
-from users_database import UserManager, UserExistsError, UserNotFoundError
-from manager import Manager
-import bcrypt
+from users_database import UserManager
 
 
 class Main:
     """Main program to manage the Inventory Manager system."""
 
     def __init__(self):
-        self.user_manager = UserManager()
+        self.user_manager = UserManager()  # UserManager to handle user data
 
     def display_main_menu(self):
         """Display the main menu."""
@@ -31,35 +29,20 @@ class Main:
 
     def register_new_user(self):
         """Register a new user."""
-        registration = Registration(self.user_manager)  # Create an instance
-        try:
-            success = registration.register_user()  # Calls register_user with validation
-            if success:
-                print("Registration successful!")
-        except ValueError as e:
-            print(f"Error: {e}")
+        registration = Registration(
+            self.user_manager
+        )  # Pass the user_manager to Registration
+        success = registration.register_user()  # Calls register_user with validation
+        if success:
+            print("Registration successful!")
+        else:
+            print("Registration failed.")
 
     def login_user(self):
         """Handle user login."""
-        try:
-            login_data = {
-                "email": input("Enter your email: ").strip(),
-                "password": input("Enter your password: ").strip(),
-            }
-            user = self.user_manager.find_user(login_data["email"])
-
-            if user and bcrypt.checkpw(
-                login_data["password"].encode(), user["password"].encode()
-            ):
-                print("Login successful!")
-                # Handle user roles if required
-            else:
-                print("Invalid email or password.")
-        except Exception as e:
-            print(f"Error during login: {e}")
+        print("Login functionality is not implemented yet.")
 
 
 if __name__ == "__main__":
     main = Main()
     main.display_main_menu()
-
