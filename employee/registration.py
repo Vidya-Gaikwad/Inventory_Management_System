@@ -1,77 +1,81 @@
-from validate_user import UserValidator, ValidationError
-import bcrypt
-import base64
-
-
 class Registration:
-    """Register and save user data to the database."""
-
-    def __init__(self, user_manager):
-        """Initialize with user manager and validator."""
-        self.user_manager = user_manager  # Store the user manager instance
-        self.validator = UserValidator()
+    def __init__(self, user_manager, user_validator):
+        self.user_manager = user_manager
+        self.user_validator = user_validator
 
     def prompt_user_input(self):
-        """Prompt the user for input and return a dictionary of user data."""
-        return {
-            "first_name": input("Enter your first name: ").strip().capitalize(),
-            "last_name": input("Enter your last name: ").strip().capitalize(),
-            "birthday": input("Enter your birthday (Format: DD/MM/YYYY): ").strip(),
-            "email": input("Enter your email: ").strip(),
-            "password": input(
-                "Enter your password (min 1 uppercase, min 1 lowercase, 8 characters and 1 symbol): "
-            ).strip(),
-            "phone_number": input("Enter your phone number with landcode: ").strip(),
+        """Prompt the user for their registration details."""
+
+        print("Welcome to the Registration System!")
+
+        # Prompt for basic user details (first name, last name, etc.)
+        first_name = input("Enter your first name: ").strip()
+        last_name = input("Enter your last name: ").strip()
+        birthday = input("Enter your birthday (Format: DD/MM/YYYY): ").strip()
+        email = input("Enter your email: ").strip()
+        password = input(
+            "Enter your password (min 1 uppercase, min 1 lowercase, 8 characters and 1 symbol): "
+        ).strip()
+        phone_number = input("Enter your phone number with landcode: ").strip()
+
+        # Prompt for address details
+        street = input("Enter your street name: ").strip()
+        house_number = input("Enter your house number: ").strip()
+        city = input("Enter your city: ").strip()
+        zip_code = input("Enter your ZIP code: ").strip()
+        country = input("Enter your country: ").strip()
+
+        # Display role choices
+        print("\nChoose a role from the following options:")
+        print("1. Manager")
+        print("2. Sales Employee")
+        print("3. Logistics Employee")
+
+        # Prompt the user to select a role
+        role_choice = input(
+            "Enter the number corresponding to your desired role: "
+        ).strip()
+
+        # Validate and map the role choice
+        role = self.get_role_from_choice(role_choice)
+
+        if role is None:
+            print("Invalid role choice. Please try again.")
+            return
+
+        # Collect the user data into a dictionary
+        user_data = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "password": password,
+            "phone_number": phone_number,
+            "birthday": birthday,
             "address": {
-                "street": input("Enter your street name: ").strip().capitalize(),
-                "house_number": input("Enter your house number: ").strip(),
-                "city": input("Enter your city: ").strip().capitalize(),
-                "zip_code": input("Enter your ZIP code: ").strip(),
-                "country": input("Enter your country: ").strip().capitalize(),
+                "street": street,
+                "house_number": house_number,
+                "city": city,
+                "zip_code": zip_code,
+                "country": country,
             },
+            "role": role,
         }
 
-    def hash_password(self, password):
-        """Hash a password using bcrypt and convert to base64 string."""
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
-        # Convert the hashed password to base64 and return as a string
-        return base64.b64encode(hashed_password).decode("utf-8")
-
-    def validate_fields(self, user_data):
-        """Validate user input fields individually."""
-        failed_field = None
-        for field, value in user_data.items():
-            if isinstance(value, dict):  # For nested address dictionary
-                nested_failed_field = self.validate_fields(value)
-                if nested_failed_field:
-                    failed_field = f"{field}.{nested_failed_field}"
-                    break
-            else:
-                if not self.validator.validator.validate({field: value}):
-                    failed_field = field
-                    break
-        return failed_field
-
-    def register_user(self, user_data=None):
-        """Register a user after prompting for input and validation."""
-        if user_data is None:
-            user_data = self.prompt_user_input()  # Prompt if no data is provided
-
-        # Validate user data
-        failed_field = self.validate_fields(user_data)
-        if failed_field:
-            print(f"Validation failed for field: {failed_field}")
-            return False
-
-        # Hash the password and update the validated user data
-        user_data["password"] = self.hash_password(user_data["password"])
-
-        # Add the user to the database
+        # Validate the user input data
         try:
-            self.user_manager.add_user(user_data)
-            print("User has been registered successfully.")
-            return True
-        except Exception as e:
-            print(f"Registration failed: {e}")
-            return False
+            validated_data = self.user_validator.validate(user_data)
+            self.user_manager.add_user(validated_data)  # Save the user data
+            print("Registration successful!")
+        except ValidationError as e:
+            print(f"Validation failed: {e}")
+
+    def get_role_from_choice(self, choice):
+        """Validate the role selection."""
+        if choice == "1":
+            return "Manager"
+        elif choice == "2":
+            return "Sales Employee"
+        elif choice == "3":
+            return "Logistics Employee"
+        else:
+            return None
