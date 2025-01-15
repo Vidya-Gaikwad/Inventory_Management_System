@@ -58,6 +58,7 @@ class Product:
 
 
     def display_product_info(self):
+        #displays the product information
         info = (f"Name: {self.product_name}, "
                 f"Quantity: {self.quantity}, Price: ${self.price:.2f}, "
                 f"Category: {self.category}")
@@ -65,13 +66,16 @@ class Product:
         return info
     
     def is_in_stock(self):
+        # checks if the product is in stock
         return self.quantity > 0
     
     def apply_discount(self, discount_percentage):
+        # Apply a discount to the product price.
         if not (0 <= discount_percentage <= 100):
             raise ValueError("Discount percentage must be between 0 and 100")
         discount = self.price * (discount_percentage / 100)
-        self.price = max(0, self.price - discount)
+        discounted_price = max(0, self.price - discount)
+        self.update_price(discounted_price)
 
     def save_product_data(self):
         # Save the updated product data back to the JSON file
@@ -90,11 +94,11 @@ class Product:
     
 
 
-product1 = Product("earphone", 10, 1000, "Electronics")
-product1.read_product_data()
-product1.display_product_info()
-product1.apply_discount(10)
-product1.update_quantity(20)
-product1.update_quantity(20)
-product1.update_price(5000)
-product1.to_dict()
+# product1 = Product("earphone", 10, 1000, "Electronics")
+# product1.read_product_data()
+# product1.display_product_info()
+# product1.apply_discount(10)
+# product1.update_quantity(20)
+# product1.update_quantity(20)
+# product1.update_price(5000)
+# product1.to_dict()
