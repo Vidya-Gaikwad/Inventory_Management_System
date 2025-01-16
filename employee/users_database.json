@@ -30,5 +30,16 @@
             "country": "test country"
         },
         "role": "Manager"
+    },
+    {
+        "first_name": "Supernew",
+        "last_name": "talis",
+        "email": "new@ex.com",
+        "phone_number": "567876543454",
+        "address": "new adress",
+        "birthday": "12/04/1988",
+        "hiring_date": "25/11/2006",
+        "salary": 5000.0,
+        "role": "logistics admin"
     }
 ]

@@ -68,3 +68,19 @@ class UserManager:
             if user["email"].strip().lower() == email:
                 return user
         return None
+
+    def update_user(self, email: str, updated_data: dict):
+        """Update an employee's details."""
+        # Find the user by email
+        user = self.find_user(email)
+
+        if user:
+            # Update the user's data by merging the old data with new updates
+            user.update(updated_data)
+
+            # Save the updated list of users back to the file
+            self.save_users()
+
+            print(f"User {email} updated successfully.")
+        else:
+            print(f"User {email} not found.")

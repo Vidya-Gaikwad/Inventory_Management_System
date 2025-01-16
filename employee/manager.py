@@ -81,12 +81,15 @@ class Manager(Employee):
                 **employee,
                 **updated_data,
             }  # Merge old data with new updates
+
+            # This creates a new Employee object with the updated data
             employee_obj = Employee(
                 updated_data,
                 updated_data["hiring_date"],
                 updated_data["salary"],
                 self.db_manager,
             )
+            # This method updates the employee's data in the database
             employee_obj.update_to_database()
             print(f"Employee {email} updated successfully.")
         else:

@@ -67,17 +67,27 @@ class Main:
         try:
             login_data = Login.prompt_user_input()
             user = self.user_manager.find_user(login_data["email"])
-        
+
             if user is None:
                 # If the user is not found, handle the error
                 print("User not found.")
                 return
 
             if user["role"] == "Manager":
-                manager = Manager(user, hiring_date=user.get("hiring_date"), salary=user.get("salary"), db_manager=self.user_manager)
+                manager = Manager(
+                    user,
+                    hiring_date=user.get("hiring_date"),
+                    salary=user.get("salary"),
+                    db_manager=self.user_manager,
+                )
                 self.manager_menu(manager)
             else:
-                employee = Employee(user, hiring_date=user.get("hiring_date"), salary=user.get("salary"), db_manager=self.user_manager)
+                employee = Employee(
+                    user,
+                    hiring_date=user.get("hiring_date"),
+                    salary=user.get("salary"),
+                    db_manager=self.user_manager,
+                )
                 self.employee_menu(employee)
         except KeyError:
             print("Error during login process.")
@@ -98,33 +108,68 @@ class Main:
         else:
             print(f"No user found with that email address.")
 
-    def manage_employees(self, manager):
-        """Employee manager/add/Update/Delete."""
-        print("*" * 75 )
-        print("\n................ Employee Management Menu: ..................")
-        print("*" * 75)
-        print("1. Add an employee")
-        print("2. Update an employee")
-        print("3. Delete an employee")
-        print("4. Find an employee")
-        print("5. Assign an employee role")
-        print("6. Go back")
-        print("-" * 75)
+    def manager_menu(self, manager):
+        """Manager's menu to perform manager-specific actions."""
+        while True:
+            print("\n.......... Manager's Menu ..........")
+            print("1. Manage Employees")
+            print("2. Access Inventory")
+            print("3. Log out")
+            print("-" * 75)
 
-        choice = input("Enter your choice (1-6): ").strip()
-        print("-" * 75)
-        try:
+            choice = input("Enter your choice (1-3): ").strip()
+            print("-" * 75)
+
             if choice == "1":
-                first_name = input("Enter First Name: ").strip().casefold()
-                last_name = input("Enter Last Name: ").strip().casefold()
-                email = input("Enter Email: ").strip()
-                phone_number = input("Enter Phone Number: ").strip()
-                address = input("Enter Address: ").casefold()
-                birthday = input("Enter Birthday(Format DD/MM/YYYY): ")
-                hiring_date = input("Enter Hiring Date(Format DD/MM/YYYY): ")
-                salary = float(input("Enter Salary: "))
-        except Exception as e:
-            print(f"One of the entries is incorrect or missing. Error {e}")
+                self.manage_employees(manager)  # Call the method to manage employees
+            elif choice == "2":
+                self.access_inventory(manager.inventory_manager)  # Access the inventory
+            elif choice == "3":
+                print("Logging out...")
+                break  # Exit from manager's menu and log out
+            else:
+                print("Invalid choice. Please try again.")
+
+    def manage_employees(self, manager):
+        """Manage Employees submenu."""
+        while True:
+            print("\n................. Manage Employees .................")
+            print("1. Add an employee")
+            print("2. Update an employee")
+            print("3. Delete an employee")
+            print("4. Find an employee")
+            print("5. Assign an employee role")
+            print("6. Go back")
+            print("-" * 75)
+
+            choice = input("Enter your choice (1-6): ").strip()
+            print("-" * 75)
+
+            if choice == "1":
+                self.add_employee(manager)
+            elif choice == "2":
+                self.update_employee(manager)
+            elif choice == "3":
+                self.delete_employee(manager)
+            elif choice == "4":
+                self.find_employee(manager)
+            elif choice == "5":
+                self.assign_employee_role(manager)
+            elif choice == "6":
+                break  # Go back to the manager menu
+            else:
+                print("Invalid choice. Please try again.")
+
+    def add_employee(self, manager):
+        """Add a new employee."""
+        first_name = input("Enter First Name: ").strip().casefold()
+        last_name = input("Enter Last Name: ").strip().casefold()
+        email = input("Enter Email: ").strip()
+        phone_number = input("Enter Phone Number: ").strip()
+        address = input("Enter Address: ").casefold()
+        birthday = input("Enter Birthday(Format DD/MM/YYYY): ")
+        hiring_date = input("Enter Hiring Date(Format DD/MM/YYYY): ")
+        salary = float(input("Enter Salary: "))
 
         employee_data = {
             "first_name": first_name,
@@ -136,32 +181,135 @@ class Main:
             "hiring_date": hiring_date,
             "salary": salary,
         }
-        manager.add_employee(employee_data)
 
-        elif choice == "2":
-            email = input("Enter the email of the employee to update: ")
-            updated_data = {}
-            update_choice = input("Do you want to update the role? (y/n): ").strip().lower()
-            if update_choice == "y":
-                updated_data["role"] = input("Enter the new role: ")
-            manager.update_employee(email, updated_data)
-        elif choice == "3":
-            email = input("Enter the email of the employee to delete: ")
-            manager.delete_employee(email)
-        elif choice == "4":
-            email = input("Enter the email of the employee to find: ")
-            manager.find_employee(email)
-        elif choice == "5":
-            email = input("Enter the email of the employee to assign a role: ")
-            role = input("Enter the role to assign: ")
-            manager.assign_role(email, role)
-        elif choice == "6":
-            return
-        else:
-            print("Invalid choice. Returning to main menu.")
+        manager.add_employee(employee_data)
+        print("Employee added successfully.")
+
+    def update_employee(self, manager):
+        """Update employee information."""
+        email = input("Enter the email of the employee to update: ").strip()
+        updated_data = {}
+
+        # Loop to show the fields to update
+        while True:
+            print("\n........... Update Employee ..........")
+            print("1. Update First Name")
+            print("2. Update Last Name")
+            print("3. Update Email")
+            print("4. Update Phone Number")
+            print("5. Update Birthday")
+            print("6. Update Address")
+            print("7. Update Hiring Date")
+            print("8. Update Salary")
+            print("9. Update Role")
+            print("0. Cancel")
+            print("-" * 50)
+
+            choice = input("Enter the number of the field you want to update: ").strip()
+
+            if choice == "1":
+                updated_data["first_name"] = input("Enter the new First Name: ").strip()
+            elif choice == "2":
+                updated_data["last_name"] = input("Enter the new Last Name: ").strip()
+            elif choice == "3":
+                updated_data["email"] = input("Enter the new Email: ").strip()
+            elif choice == "4":
+                updated_data["phone_number"] = input(
+                    "Enter the new Phone Number: "
+                ).strip()
+            elif choice == "5":
+                updated_data["birthday"] = input(
+                    "Enter the new Birthday (DD/MM/YYYY): "
+                ).strip()
+            elif choice == "6":
+                # Address submenu
+                updated_data["address"] = self.update_address()
+            elif choice == "7":
+                updated_data["hiring_date"] = input(
+                    "Enter the new Hiring Date (DD/MM/YYYY): "
+                ).strip()
+            elif choice == "8":
+                updated_data["salary"] = float(input("Enter the new Salary: ").strip())
+            elif choice == "9":
+                updated_data["role"] = input("Enter the new Role: ").strip()
+            elif choice == "0":
+                print("Update cancelled.")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+                continue
+
+            def update_address(self):
+                """Prompt the manager to update the address."""
+                print("\n........... Update Address ..........")
+
+                address_data = {}  # Initialize empty address data here
+
+                while True:
+                    print("\n........... Address Submenu ..........")
+                    print("1. Update Street")
+                    print("2. Update House Number")
+                    print("3. Update City")
+                    print("4. Update Zip Code")
+                    print("5. Update Country")
+                    print("6. Go Back")
+                    print("-" * 50)
+
+                    # Get user's choice for updating address
+                    choice = input(
+                        "Enter the number of the part of the address to update: "
+                    ).strip()
+
+                    if choice == "1":
+                        address_data["street"] = input("Enter the new Street: ").strip()
+                    elif choice == "2":
+                        address_data["house_number"] = input(
+                            "Enter the new House Number: "
+                        ).strip()
+                    elif choice == "3":
+                        address_data["city"] = input("Enter the new City: ").strip()
+                    elif choice == "4":
+                        address_data["zip_code"] = input(
+                            "Enter the new Zip Code: "
+                        ).strip()
+                    elif choice == "5":
+                        address_data["country"] = input(
+                            "Enter the new Country: "
+                        ).strip()
+                    elif choice == "6":
+                        break  # Go back to the main update menu
+                    else:
+                        print("Invalid choice. Please try again.")
+                        continue
+
+                    return address_data
+
+        # Proceed to update the employee data
+        if updated_data:
+            try:
+                manager.update_employee(email, updated_data)
+                print(f"Employee {email} updated successfully.")
+            except Exception as e:
+                print(f"Error updating employee {email}: {str(e)}")
+
+    def delete_employee(self, manager):
+        """Delete an employee."""
+        email = input("Enter the email of the employee to delete: ")
+        manager.delete_employee(email)
+
+    def find_employee(self, manager):
+        """Find an employee."""
+        email = input("Enter the email of the employee to find: ")
+        manager.find_employee(email)
+
+    def assign_employee_role(self, manager):
+        """Assign a role to an employee."""
+        email = input("Enter the email of the employee to assign a role: ")
+        role = input("Enter the role to assign: ")
+        manager.assign_role(email, role)
 
     def access_inventory(self, inventory_manager):
-
+        """Inventory access and modification menu."""
         while True:
             print("\nInventory Management System")
             print("1. Modify/Update Inventory")
@@ -174,222 +322,167 @@ class Main:
             print("-" * 75)
 
             if choice == "1":
-                submenu_1 = True
-                while submenu_1:
-                    print(".......... Modify/Update Inventory menu ..........")
-                    print("1. Display all products available in inventory")
-                    print("2. Get total inventory value")
-                    print("3. Add Product")
-                    print("4. Update Product")
-                    print("5. Remove Product")
-                    print("6. Go back")
-                    print("-" * 75)
-                    print("You are now in submenu: Modify/Update Inventory")
-                    choice = input("Enter your choice (1-6):  ")
-                    print("-" * 75)
-                    if choice == "1":
-                        all_products = inventory_manager.read_product_data()
-                        print("Available products in inventory are: ")
-                        for item, value in all_products.items():
-                            print(
-                                f"-- {all_products[item]['product_name']}, Price: ${all_products[item]['price']:.2f}"
-                            )
-                        print("\n")
-                    elif choice == "2":
-                        print("-" * 75)
-                        print(
-                            f"Total inventory value is ${inventory_manager.get_total_inventory_value()}"
-                        )
-                        print("-" * 75)
-                    elif choice == "3":
-                        product_id = input("Enter Product ID (format: A123): ")
-                        product_name = input("Enter Product Name: ")
-                        quantity = float(input("Enter Quantity: "))
-                        price = float(input("Enter Price: "))
-                        category = input(
-                            "Enter Category (Electronics, Furniture, Clothes, Footwear): "
-                        )
-                        product = Product(product_name, quantity, price, category)
-                        try:
-                            inventory_manager.add_product(product_id, product)
-                        except Exception as e:
-                            print(f"Error: {e}")
-                    elif choice == "4":
-                        product_id = input("Enter Product ID to update: ")
-                        product_name = input("Enter New Product Name: ")
-                        quantity = float(input("Enter New Quantity: "))
-                        price = float(input("Enter New Price: "))
-                        category = input("Enter New Category: ")
-                        updated_product = Product(
-                            product_name, quantity, price, category
-                        )
-                        try:
-                            if inventory_manager.update_product(
-                                product_id, updated_product
-                            ):
-                                print("Product updated successfully.")
-                            else:
-                                print("Product not found.")
-                        except Exception as e:
-                            print(f"Error: {e}")
-                    elif choice == "5":
-                        product_id = input("Enter Product ID to remove: ")
-                        try:
-                            inventory_manager.remove_product(product_id)
-                        except Exception as e:
-                            print(f"Error: {e}")
-                    elif choice == "6":
-                        submenu_1 = False
-                    else:
-                        print("Invalid option")
-
+                self.modify_inventory(inventory_manager)
             elif choice == "2":
-                submenu_2 = True
-                while submenu_2:
-                    print("1. Search Product by ID")
-                    print("2. Search Product by product_name")
-                    print("3. Go back")
-                    print("-" * 75)
-                    choice = input("Enter your choice (1-3):  ")
-                    print("-" * 75)
-                    if choice == "1":
-                        product_id = input("Enter Product ID to display: ")
-                        product_data = inventory_manager.read_product_data()
-                        if product_id in product_data:
-                            product_info = product_data[product_id]
-                            print(f"Product ID: {product_id}")
-                            print(f"Name: {product_info['product_name']}")
-                            print(f"Quantity: {product_info['quantity']}")
-                            print(f"Price: {product_info['price']}")
-                            print(f"Category: {product_info['category']}")
-                        else:
-                            print("Product not found.")
-
-                    elif choice == "2":
-                        product_name = input("Enter name of product:  ")
-                        product_found = inventory_manager.search_product_by_name(
-                            product_name
-                        )
-                        if product_found:
-                            print(f"Name: {product_found['product_name']}")
-                            print(f"Quantity: {product_found['quantity']}")
-                            print(f"Price: {product_found['price']}")
-                            print(f"Category: {product_found['category']}")
-                        else:
-                            print("Product not found.")
-
-                    elif choice == "3":
-                        submenu_2 = False
-
+                self.search_product(inventory_manager)
             elif choice == "3":
-                submenu_3 = True
-                while submenu_3:
-                    print("1. Update quantity of specific product")
-                    print("2. Update price of specific product")
-                    print("3. Apply Discount")
-                    print("4. Go back")
-                    print("-" * 75)
-                    choice = input("Enter your choice (1-4):  ")
-                    print("-" * 75)
-                    if choice == "1":
-                        product_name = input("Enter name of product: ")
-                        added_quantity = float(
-                            input("Enter quantity to be added/subtracted: ")
-                        )
-                        product_found = inventory_manager.search_product_by_name(
-                            product_name
-                        )
-                        product_obj = Product(**product_found)
-                        try:
-                            updated_quantity = product_obj.update_quantity(
-                                added_quantity
-                            )
-                            print(
-                                f"Quantity of '{product_name}' updated to {updated_quantity}"
-                            )
-                        except Exception as e:
-                            print(f"Error: {e}")
-                    elif choice == "2":
-                        product_name = input("Enter name of product: ")
-                        updated_price = float(input("Enter new price: "))
-                        product_found = inventory_manager.search_product_by_name(
-                            product_name
-                        )
-                        product_obj = Product(**product_found)
-                        try:
-                            product_obj.update_price(updated_price)
-                            print(
-                                f"Price of '{product_name}' updated to '${updated_price}'"
-                            )
-                        except Exception as e:
-                            print(f"Error: {e}")
-                    elif choice == "3":
-                        product_name = input("Enter name of product: ")
-                        product_found = inventory_manager.search_product_by_name(
-                            product_name
-                        )
-                        product_obj = Product(**product_found)
-                        discount_percentage = float(
-                            input("Enter Discount Percentage: ")
-                        )
-                        try:
-                            if product_found:
-                                product_obj.apply_discount(discount_percentage)
-                                print(
-                                    f"Discount applied successfully. New Price: {product_obj.price}"
-                                )
-                            else:
-                                print("Product not found.")
-                        except Exception as e:
-                            print(f"Error: {e}")
-                    elif choice == "4":
-                        submenu_3 = False
-                    else:
-                        print("Invalid option!")
-
+                self.modify_product(inventory_manager)
             elif choice == "4":
-                submenu_4 = True
-                while submenu_4:
-                    print("1. Filter products by price")
-                    print("2. Filter products by category")
-                    print("3. Filter products by low quantity (less than 5)")
-                    print("4. Go back")
-                    print("-" * 75)
-                    choice = input("Enter your choice (1-4):  ")
-                    print("-" * 75)
-                    if choice == "1":
-                        result = inventory_manager.filter_product_by_price()
-                        if result:
-                            for items in result:
-                                print(
-                                    f"Product_name: {items[1]['product_name']}--- Price: {items[1]['price']}"
-                                )
-                        else:
-                            print("No product found!")
-                    elif choice == "2":
-                        products = inventory_manager.filter_product_by_category()
-                        for items in products:
-                            print(
-                                f"Product_name: {items[1]['product_name']}--- Price: {items[1]['price']}"
-                            )
-                    elif choice == "3":
-                        products_found = (
-                            inventory_manager.filter_product_with_low_quantity()
-                        )
-                        try:
-                            for items in products_found:
-                                print(
-                                    f"Product_name: {items[1]['product_name']}--- Quantity: {items[1]['quantity']}"
-                                )
-                        except TypeError:
-                            print("No products with low quantity found.")
-                    elif choice == "4":
-                        submenu_4 = False
+                self.filter_products(inventory_manager)
             elif choice == "5":
                 print("Exiting the Inventory Management System.")
                 break
             else:
                 print("Invalid choice. Please try again.")
+
+    def modify_inventory(self, inventory_manager):
+        """Modify/Update inventory submenu."""
+        while True:
+            print("\n.......... Modify/Update Inventory ..........")
+            print("1. Display all products")
+            print("2. Get total inventory value")
+            print("3. Add Product")
+            print("4. Update Product")
+            print("5. Remove Product")
+            print("6. Go back")
+            print("-" * 75)
+            choice = input("Enter your choice (1-6): ")
+            print("-" * 75)
+
+            if choice == "1":
+                all_products = inventory_manager.read_product_data()
+                print("Available products in inventory are: ")
+                for item, value in all_products.items():
+                    print(
+                        f"-- {all_products[item]['product_name']}, Price: ${all_products[item]['price']:.2f}"
+                    )
+            elif choice == "2":
+                print("-" * 75)
+                print(
+                    f"Total inventory value is ${inventory_manager.get_total_inventory_value()}"
+                )
+            elif choice == "3":
+                self.add_product(inventory_manager)
+            elif choice == "4":
+                self.update_product(inventory_manager)
+            elif choice == "5":
+                self.remove_product(inventory_manager)
+            elif choice == "6":
+                break  # Go back to the inventory menu
+            else:
+                print("Invalid option. Please try again.")
+
+    def add_product(self, inventory_manager):
+        """Add a product to the inventory."""
+        product_id = input("Enter Product ID (format: A123): ")
+        product_name = input("Enter Product Name: ")
+        quantity = float(input("Enter Quantity: "))
+        price = float(input("Enter Price: "))
+        category = input("Enter Category (Electronics, Furniture, Clothes, Footwear): ")
+        product = Product(product_name, quantity, price, category)
+        try:
+            inventory_manager.add_product(product_id, product)
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def update_product(self, inventory_manager):
+        """Update product information."""
+        product_id = input("Enter Product ID to update: ")
+        product_name = input("Enter New Product Name: ")
+        quantity = float(input("Enter New Quantity: "))
+        price = float(input("Enter New Price: "))
+        category = input("Enter New Category: ")
+        updated_product = Product(product_name, quantity, price, category)
+        try:
+            if inventory_manager.update_product(product_id, updated_product):
+                print("Product updated successfully.")
+            else:
+                print("Product not found.")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def remove_product(self, inventory_manager):
+        """Remove a product from the inventory."""
+        product_id = input("Enter Product ID to remove: ")
+        try:
+            inventory_manager.remove_product(product_id)
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def search_product(self, inventory_manager):
+        """Search a product by ID or name."""
+        while True:
+            print("\n1. Search Product by ID")
+            print("2. Search Product by Name")
+            print("3. Go back")
+            print("-" * 75)
+            choice = input("Enter your choice (1-3):  ")
+            print("-" * 75)
+
+            if choice == "1":
+                product_id = input("Enter Product ID to display: ")
+                product_data = inventory_manager.read_product_data()
+                if product_id in product_data:
+                    product_info = product_data[product_id]
+                    print(f"Product ID: {product_id}")
+                    print(f"Name: {product_info['product_name']}")
+                    print(f"Quantity: {product_info['quantity']}")
+                    print(f"Price: {product_info['price']}")
+                    print(f"Category: {product_info['category']}")
+                else:
+                    print("Product not found.")
+            elif choice == "2":
+                product_name = input("Enter name of product:  ")
+                product_found = inventory_manager.search_product_by_name(product_name)
+                if product_found:
+                    print(f"Name: {product_found['product_name']}")
+                    print(f"Quantity: {product_found['quantity']}")
+                    print(f"Price: {product_found['price']}")
+                    print(f"Category: {product_found['category']}")
+                else:
+                    print("Product not found.")
+            elif choice == "3":
+                break  # Go back to the main inventory menu
+
+    def filter_products(self, inventory_manager):
+        """Filter products based on certain criteria."""
+        while True:
+            print("\n1. Filter products by price")
+            print("2. Filter products by category")
+            print("3. Filter products by low quantity (less than 5)")
+            print("4. Go back")
+            print("-" * 75)
+            choice = input("Enter your choice (1-4):  ")
+            print("-" * 75)
+
+            if choice == "1":
+                result = inventory_manager.filter_product_by_price()
+                if result:
+                    for items in result:
+                        print(
+                            f"Product_name: {items[1]['product_name']}--- Price: {items[1]['price']}"
+                        )
+                else:
+                    print("No product found!")
+            elif choice == "2":
+                products = inventory_manager.filter_product_by_category()
+                for items in products:
+                    print(
+                        f"Product_name: {items[1]['product_name']}--- Price: {items[1]['price']}"
+                    )
+            elif choice == "3":
+                products_found = inventory_manager.filter_product_with_low_quantity()
+                try:
+                    for items in products_found:
+                        print(
+                            f"Product_name: {items[1]['product_name']}--- Quantity: {items[1]['quantity']}"
+                        )
+                except TypeError:
+                    print("No products with low quantity found.")
+            elif choice == "4":
+                break  # Go back to the inventory menu
+            else:
+                print("Invalid option! Please try again.")
 
 
 if __name__ == "__main__":
