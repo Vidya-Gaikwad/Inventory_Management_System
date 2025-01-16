@@ -35,7 +35,7 @@ class UserValidator:
             },
             "phone_number": {
                 "type": "string",
-                "regex": r"^\+?\d{1,3}[-.\s]?\d{9,12}$",
+                "regex": r"^\d{1,3}\d{9,12}$",
                 "required": True,
             },
             "birthday": {
@@ -115,7 +115,7 @@ class UserValidator:
                     )
                 elif field == "phone_number":
                     error_messages.append(
-                        "Please enter a valid phone number with the correct format (e.g., +1-555-1234)."
+                        "Please enter a valid phone number with the correct format (Landcode + 9-12 digits)."
                     )
                 elif field == "birthday":
                     error_messages.append(

@@ -1,6 +1,3 @@
-from validate_user import UserValidator, ValidationError
-
-
 class Registration:
     def __init__(self, user_manager, user_validator):
         self.user_manager = user_manager
@@ -11,8 +8,8 @@ class Registration:
         print("Welcome to the Registration System!")
 
         # Prompt for basic user details (first name, last name, etc.)
-        first_name = input("Enter your first name: ").strip().casefold()
-        last_name = input("Enter your last name: ").strip().casefold()
+        first_name = input("Enter your first name: ").strip()
+        last_name = input("Enter your last name: ").strip()
         birthday = input("Enter your birthday (Format: DD/MM/YYYY): ").strip()
         email = input("Enter your email: ").strip()
         password = input(
@@ -21,11 +18,11 @@ class Registration:
         phone_number = input("Enter your phone number with landcode: ").strip()
 
         # Prompt for address details
-        street = input("Enter your street name: ").strip().casefold()
+        street = input("Enter your street name: ").strip()
         house_number = input("Enter your house number: ").strip()
-        city = input("Enter your city: ").strip().casefold()
+        city = input("Enter your city: ").strip()
         zip_code = input("Enter your ZIP code: ").strip()
-        country = input("Enter your country: ").strip().casefold()
+        country = input("Enter your country: ").strip()
 
         # Display role choices
         print("\nChoose a role from the following options:")
@@ -45,12 +42,12 @@ class Registration:
             print("Invalid role choice. Please try again.")
             return
 
-        # Collect the user data into a dictionary
+        # Collect the user data into a dictionary (no hashing for password)
         user_data = {
             "first_name": first_name,
             "last_name": last_name,
             "email": email,
-            "password": password,
+            "password": password,  # Store the password as is
             "phone_number": phone_number,
             "birthday": birthday,
             "address": {

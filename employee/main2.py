@@ -1,15 +1,12 @@
-from registration2 import Registration
-from users_database import UserManager
-from login import Login
-from manager import Manager
 from employee import Employee
-from validate_user import UserValidator, ValidationError
+from login import Login
+from registration import Registration
+from users_database import UserManager, UserExistsError, UserNotFoundError
 
-# from Inventory_Management_System.inventory.inventory_manager import InventoryManager
-# from Inventory_Management_System.inventory.product import Product
 
 import sys
 import os
+
 
 # Add the inventory folder to the sys.path
 sys.path.append(
@@ -21,146 +18,49 @@ import product
 
 
 class Main:
-    """Main program to manage the Inventory Manager system."""
-
-    def __init__(self):
-        self.user_manager = UserManager()  # Manages user database
-        self.user_validator = UserValidator()  # Validates user input
 
     def display_main_menu(self):
-        """Display the main menu."""
-        while True:
-            print("\n................. Welcome to Inventory Manager .................")
-            print("1. Register a user")
-            print("2. Login (users and employees)")
-            print("3. Forgot password")
-            print("4. Go back")
-            print("-" * 75)
+        user_manager = UserManager()
+        login_system = Login(user_manager)
+        registration_system = Registration(user_manager)
+        inventory_manager = InventoryManager()
 
-            choice = input("Enter your choice (1-4): ").strip()
-            print("-" * 75)
-            if choice == "1":
-                self.register_user()
-            elif choice == "2":
-                self.login_user()
+        while True:
+            print("\nWelcome to the Inventory Management System")
+            print("1. Login")
+            print("2. Register")
+            print("3. Exit")
+
+            choice = input("Enter your choice: ")
+
+            if choice == "1":  # Login
+                if login_system.login():
+                    print("Login successful!")
+                    self.access_inventory(
+                        inventory_manager
+                    )  # Use self to call instance method
+                    break  # Exit after accessing inventory
+                else:
+                    print("Login failed. Please try again.")
+
+            elif choice == "2":  # Register
+                if registration_system.register_user():
+                    print("Registration successful! You can now log in.")
+                else:
+                    print("Registration failed. Please try again.")
+
             elif choice == "3":
-                self.forgot_password()  # New option to change password if forgotten
-            elif choice == "4":
-                print("Goodbye!")
+                print("Exiting system...")
                 break
+
             else:
                 print("Invalid choice. Please try again.")
 
-    def register_user(self):
-        """Register a new user."""
-        try:
-            registration = Registration(
-                self.user_manager, self.user_validator
-            )  # Create instance of Registration class
-            registration.register_user()  # Call register_user() on the instance
-            print("Registration successful!")
-        except ValueError as e:
-            print(f"Error: {e}")
-
-    def login_user(self):
-        """Handle user login."""
-        try:
-            login_data = Login.prompt_user_input()
-            user = self.user_manager.find_user(login_data["email"])
-        
-            if user is None:
-                # If the user is not found, handle the error
-                print("User not found.")
-                return
-
-            if user["role"] == "Manager":
-                manager = Manager(user, hiring_date=user.get("hiring_date"), salary=user.get("salary"), db_manager=self.user_manager)
-                self.manager_menu(manager)
-            else:
-                employee = Employee(user, hiring_date=user.get("hiring_date"), salary=user.get("salary"), db_manager=self.user_manager)
-                self.employee_menu(employee)
-        except KeyError:
-            print("Error during login process.")
-
-    def forgot_password(self):
-        """Handle forgot password scenario."""
-        email = input(
-            "Enter your email address: "
-        ).strip()  # Strip any extra whitespace
-
-        # Check if the user exists in the database
-        user_data = self.user_manager.find_user(email)
-
-        if user_data:
-            print(f"A password reset email has been sent to {email}.")
-            # Here, you can implement further actions for password recovery (e.g., reset link, etc.)
-            # For now, let's just simulate sending an email.
-        else:
-            print(f"No user found with that email address.")
-
-    def manage_employees(self, manager):
-        """Employee manager/add/Update/Delete."""
-        print("*" * 75 )
-        print("\n................ Employee Management Menu: ..................")
-        print("*" * 75)
-        print("1. Add an employee")
-        print("2. Update an employee")
-        print("3. Delete an employee")
-        print("4. Find an employee")
-        print("5. Assign an employee role")
-        print("6. Go back")
-        print("-" * 75)
-
-        choice = input("Enter your choice (1-6): ").strip()
-        print("-" * 75)
-        try:
-            if choice == "1":
-                first_name = input("Enter First Name: ").strip().casefold()
-                last_name = input("Enter Last Name: ").strip().casefold()
-                email = input("Enter Email: ").strip()
-                phone_number = input("Enter Phone Number: ").strip()
-                address = input("Enter Address: ").casefold()
-                birthday = input("Enter Birthday(Format DD/MM/YYYY): ")
-                hiring_date = input("Enter Hiring Date(Format DD/MM/YYYY): ")
-                salary = float(input("Enter Salary: "))
-        except Exception as e:
-            print(f"One of the entries is incorrect or missing. Error {e}")
-
-        employee_data = {
-            "first_name": first_name,
-            "last_name": last_name,
-            "email": email,
-            "phone_number": phone_number,
-            "address": address,
-            "birthday": birthday,
-            "hiring_date": hiring_date,
-            "salary": salary,
-        }
-        manager.add_employee(employee_data)
-
-        elif choice == "2":
-            email = input("Enter the email of the employee to update: ")
-            updated_data = {}
-            update_choice = input("Do you want to update the role? (y/n): ").strip().lower()
-            if update_choice == "y":
-                updated_data["role"] = input("Enter the new role: ")
-            manager.update_employee(email, updated_data)
-        elif choice == "3":
-            email = input("Enter the email of the employee to delete: ")
-            manager.delete_employee(email)
-        elif choice == "4":
-            email = input("Enter the email of the employee to find: ")
-            manager.find_employee(email)
-        elif choice == "5":
-            email = input("Enter the email of the employee to assign a role: ")
-            role = input("Enter the role to assign: ")
-            manager.assign_role(email, role)
-        elif choice == "6":
-            return
-        else:
-            print("Invalid choice. Returning to main menu.")
-
     def access_inventory(self, inventory_manager):
+        print("\n")
+        print("*" * 70)
+        print("------------ Welcome to Inventory management System ------------")
+        print("*" * 70)
 
         while True:
             print("\nInventory Management System")

@@ -1,7 +1,5 @@
-import bcrypt
 from employee import Employee
-from users_database import UserManager
-from validate_user import UserValidator, ValidationError
+from users_database import UserManager, UserExistsError, UserNotFoundError
 
 
 class Manager(Employee):
@@ -42,16 +40,6 @@ class Manager(Employee):
             print(f"Error during login: {e}")
             return False
 
-    def validate_login(self, entered_password, stored_password) -> bool:
-        """Compare entered password with stored password."""
-        return bcrypt.checkpw(entered_password.encode(), stored_password.encode())
-
-    def hash_password(self, password):
-        """Hash a password using bcrypt and convert to string (UTF-8)."""
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
-        return hashed_password.decode("utf-8")  # Convert bytes to string (UTF-8)
-
     def assign_role(self, employee_email: str, role: str):
         """Assign a role to an employee."""
         if self.role != "Manager":
@@ -67,6 +55,60 @@ class Manager(Employee):
         self.db_manager.save_users()  # Save the updated user data
         print(f"Role {role} assigned to {employee_email}.")
         return True
+
+    def add_employee(self, employee_data: dict):
+        """Add a new employee to the database."""
+        try:
+            new_employee = Employee(
+                employee_data,
+                employee_data["hiring_date"],
+                employee_data["salary"],
+                self.db_manager,
+            )
+            new_employee.save_to_database()
+            print(
+                f"Employee {employee_data['first_name']} {employee_data['last_name']} added successfully."
+            )
+        except UserExistsError as e:
+            print(f"Error: {e}")
+
+    def update_employee(self, email: str, updated_data: dict):
+        """Update an employee's details."""
+        employee = self.db_manager.find_user(email)
+        if employee:
+            # Update the employee's data and save it to the database
+            updated_data = {
+                **employee,
+                **updated_data,
+            }  # Merge old data with new updates
+            employee_obj = Employee(
+                updated_data,
+                updated_data["hiring_date"],
+                updated_data["salary"],
+                self.db_manager,
+            )
+            employee_obj.update_to_database()
+            print(f"Employee {email} updated successfully.")
+        else:
+            print(f"Employee {email} not found.")
+
+    def delete_employee(self, email: str):
+        """Delete an employee from the database."""
+        employee = self.db_manager.find_user(email)
+        if employee:
+            self.db_manager.users.remove(employee)
+            self.db_manager.save_users()
+            print(f"Employee {email} deleted successfully.")
+        else:
+            print(f"Employee {email} not found.")
+
+    def find_employee(self, email: str):
+        """Find an employee by email."""
+        employee = self.db_manager.find_user(email)
+        if employee:
+            print(f"Employee found: {employee}")
+        else:
+            print(f"Employee {email} not found.")
 
 
 # Sample employee data for 3 employees

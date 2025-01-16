@@ -8,11 +8,6 @@ class Login:
     def __init__(self, user_manager):
         self.user_manager = user_manager
 
-    def hash_password(self, password):
-        """Hash a password using bcrypt."""
-        salt = bcrypt.gensalt()
-        return bcrypt.hashpw(password.encode(), salt)
-
     def validate_password(self, input_password, stored_hashed_password):
         """
         Validate the input password by comparing its hash with the stored hash.

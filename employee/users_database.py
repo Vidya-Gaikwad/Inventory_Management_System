@@ -1,4 +1,3 @@
-import base64
 import json
 import bcrypt
 
@@ -26,9 +25,18 @@ class UserManager:
         """Load users from the JSON file."""
         try:
             with open(self.db_file, "r") as file:
-                return json.load(file)
+                content = file.read().strip()
+                if content:  # Only try to load if the file isn't empty
+                    return json.loads(content)
+                else:
+                    return []  # Return an empty list if the file is empty
         except FileNotFoundError:
             return []  # Return an empty list if the file does not exist
+        except json.JSONDecodeError:
+            print(
+                "Error: The users database file is corrupted or contains invalid JSON."
+            )
+            return []  # Return an empty list if the file contains invalid JSON
 
     def save_users(self):
         """Save users to the JSON file."""
@@ -44,6 +52,7 @@ class UserManager:
                 f"User with email {user_data['email']} already exists."
             )
 
+        # Add the new user data to the list
         self.users.append(user_data)
         self.save_users()
 
@@ -59,25 +68,3 @@ class UserManager:
             if user["email"].strip().lower() == email:
                 return user
         return None
-
-    def hash_password(self, password):
-        """Hash a password using bcrypt."""
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode(), salt)
-        return base64.b64encode(hashed_password).decode(
-            "utf-8"
-        )  # Convert to base64 string
-
-    def store_password(self, password):
-        """Store the password in base64 format."""
-        return self.hash_password(password)
-
-    def update_password(self, email, new_password):
-        """Update the password for a user."""
-        user_data = self.find_user(email)
-        if user_data:
-            user_data["password"] = self.hash_password(new_password)
-            self.save_users()
-            return True
-        else:
-            raise UserNotFoundError(f"No user found with email {email}.")

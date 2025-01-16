@@ -1,52 +1,34 @@
 [
     {
-        "first_name": "Carla",
-        "last_name": "Perez",
-        "email": "carla@example.com",
-        "password": "$2b$12$EbtlICtDHB8VEN8O.ly.GObuPM00idWEs9cl/G7pg1Qr3ivz9717i",
-        "role": "Manager",
-        "phone_number": "555-1234",
-        "address": "Calle Ficticia 123, Ciudad de M\u00e9xico, CDMX",
-        "birthday": "15/05/1990"
+        "first_name": "test",
+        "last_name": "test",
+        "email": "test@e.com",
+        "password": "JDJiJDEyJFV2SXdGWGtXV3dsS3h0Tnl1NDQyQXVpajlFSVZ4Mk1SVVI5RjNzY0NQMy5XMmRONkJOQi95",
+        "phone_number": "4987638765",
+        "birthday": "12/12/1990",
+        "address": {
+            "street": "street test",
+            "house_number": "3",
+            "city": "test city",
+            "zip_code": "34564",
+            "country": "test country"
+        },
+        "role": "Manager"
     },
     {
-        "first_name": "Pedro",
-        "last_name": "Perez",
-        "email": "perez@example.com",
-        "password": "$2b$12$jsJiILe9OZGVy9KqCmQTXOKmhuqboTKmgWWL/VVP4oO2.4hAiGO6W",
-        "role": "Manager",
-        "phone_number": "555-1234",
-        "address": "Calle Ficticia 123, Ciudad de M\u00e9xico, CDMX",
-        "birthday": "15/05/1990"
-    },
-    {
-        "first_name": "Carlos",
-        "last_name": "Ramirez",
-        "email": "carlos.ramirez@example.com",
-        "password": "$2b$12$Yc6IcYp376epM8mSW5fjSuig425Qx7A1kqBC8LG1NNlanNwg7iQd.",
-        "role": "Inventory Admin",
-        "phone_number": "555-5678",
-        "address": "Avenida 2, Ciudad de M\u00e9xico, CDMX",
-        "birthday": "20/11/1985"
-    },
-    {
-        "first_name": "Ana",
-        "last_name": "Gomez",
-        "email": "ana.gomez@example.com",
-        "password": "$2b$12$Lv08w3jgI66E5c7uMAaUl.Upgp4sO6tDjgeFr7eh71t4Bz09l26ie",
-        "role": "Logistic Employee",
-        "phone_number": "555-8765",
-        "address": "Calle Falsa 456, Ciudad de M\u00e9xico, CDMX",
-        "birthday": "25/03/1992"
-    },
-    {
-        "first_name": "Juan",
-        "last_name": "P\u00e9rez",
-        "email": "juan.perez@example.com",
-        "password": "$2b$12$8wyOlAbM1rApVZ2OkuUgS.ixaNFmW4O23TjjiMAi5wqKnB962WnHu",
-        "role": "Manager",
-        "phone_number": "555-1234",
-        "address": "Calle Ficticia 123, Ciudad de M\u00e9xico, CDMX",
-        "birthday": "15/05/1990"
+        "first_name": "test",
+        "last_name": "test",
+        "email": "t@e.com",
+        "password": "Test123!",
+        "phone_number": "498763782736",
+        "birthday": "12/04/1988",
+        "address": {
+            "street": "test street",
+            "house_number": "87",
+            "city": "test city",
+            "zip_code": "87656",
+            "country": "test country"
+        },
+        "role": "Manager"
     }
 ]
