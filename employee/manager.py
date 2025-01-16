@@ -1,5 +1,15 @@
 from employee import Employee
 from users_database import UserManager, UserExistsError, UserNotFoundError
+import sys
+import os
+
+# Add the inventory folder to the sys.path
+# sys.path.append(
+#     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "inventory"))
+# )
+
+# import inventory_manager
+# import product
 
 
 class Manager(Employee):
@@ -13,6 +23,7 @@ class Manager(Employee):
     ):
         super().__init__(user_data, hiring_date, salary, db_manager)
         self.role = role
+        # self.inventory_manager = inventory_manager.InventoryManager()
 
     def login(self, email, password):
         """Validate the manager's login."""
@@ -91,7 +102,6 @@ class Manager(Employee):
             )
             # This method updates the employee's data in the database
             employee_obj.update_to_database()
-            print(f"Employee {email} updated successfully.")
         else:
             print(f"Employee {email} not found.")
 
@@ -112,6 +122,48 @@ class Manager(Employee):
             print(f"Employee found: {employee}")
         else:
             print(f"Employee {email} not found.")
+
+    def modify_inventory(self):
+        """Access and modify the inventory."""
+        # Implementation for inventory management
+        pass
+
+    def add_product(self, product_id, product_instance):
+        """Add a product to the inventory."""
+        self.inventory_manager.add_product(product_id, product_instance)
+
+    def update_product(self, product_id, updated_product):
+        """Update product information in the inventory."""
+        return self.inventory_manager.update_product(product_id, updated_product)
+
+    def remove_product(self, product_id):
+        """Remove a product from the inventory."""
+        self.inventory_manager.remove_product(product_id)
+
+    def search_product(self, product_id):
+        """Search for a product by its ID."""
+        return self.inventory_manager.search_product(product_id)
+
+    def filter_products_by_price(self, price_limit):
+        """Filter products by price."""
+        return self.inventory_manager.filter_product_by_price(price_limit)
+
+    def filter_products_by_category(self, category):
+        """Filter products by category."""
+        return self.inventory_manager.filter_product_by_category(category)
+
+    def filter_products_by_low_quantity(self, quantity_limit):
+        """Filter products by low quantity."""
+        return self.inventory_manager.filter_product_with_low_quantity(quantity_limit)
+
+    def display_product_info(self, product):
+        """Display product information."""
+        return product.display_product_info()
+
+    def apply_discount(self, product, discount_percentage):
+        """Apply a discount to a product."""
+        product.apply_discount(discount_percentage)
+        self.update_product(product.product_id, product)
 
 
 # Sample employee data for 3 employees
