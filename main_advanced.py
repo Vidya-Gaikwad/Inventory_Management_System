@@ -1,4 +1,5 @@
 from employee.employee import Employee
+from employee.manager import Manager
 from employee.login import Login
 from employee.registration import Registration
 from employee.users_database import UserManager, UserExistsError, UserNotFoundError
@@ -6,48 +7,121 @@ from inventory.inventory_manager import InventoryManager
 from inventory.product import Product
 import bcrypt
 
+
 class Main:
-    def display_main_menu(self):  
-        user_manager = UserManager()
-        login_system = Login(user_manager)
-        registration_system = Registration(user_manager)
-        inventory_manager = InventoryManager()
+    """Main program to manage the Inventory Manager system."""
 
+    def __init__(self):
+        self.user_manager = UserManager()  # Manages user database
+        # self.inventory_manger = InventoryManager()  # Manages inventory database
+        # self.product = Product()  # Manages product database
+
+    def display_main_menu(self):
+        """Display the main menu."""
         while True:
-            print("------------ Welcome to Inventory management System ------------")
-            print("1. Login")
-            print("2. Register")
+            print("\nWelcome to Inventory Manager")
+            print("1. Register a user")
+            print("2. Login (users and employees)")
             print("3. Exit")
-            print("*" * 70)
-            choice = input("Enter your choice: ")
-            print("*" * 70)
 
-            if choice == "1":  # Login
-                if login_system.login():
-                    print("Login successful!")
-                    self.access_inventory(inventory_manager)  # Use self to call instance method
-                    break  # Exit after accessing inventory
-                else:
-                    print("Login failed. Please try again.")
-
-            elif choice == "2":  # Register
-                if registration_system.register_user():
-                    print("Registration successful! You can now log in.")
-                else:
-                    print("Registration failed. Please try again.")
-
+            choice = input("Enter your choice (1-3): ").strip()
+            if choice == "1":
+                self.register_user()
+            elif choice == "2":
+                self.login_user()
             elif choice == "3":
-                print("Exiting system...")
+                print("Goodbye!")
                 break
-
             else:
                 print("Invalid choice. Please try again.")
 
-    def access_inventory(self, inventory_manager): 
-        print("\n")
-        print("*" * 70)
-        print("------------ Welcome to Inventory management System ------------")
-        print("*" * 70)
+    def register_user(self):
+        """Register a new user."""
+        try:
+            registration_data = Registration.prompt_user_input()
+            Registration.register_user(registration_data)
+            print("Registration successful!")
+        except ValueError as e:
+            print(f"Error: {e}")
+
+    def login_user(self):
+        """Handle user login."""
+        try:
+            login_data = Login.prompt_user_input()
+            user = self.user_manager.get_user_by_email(login_data["email"])
+
+            if bcrypt.checkpw(
+                login_data["password"].encode(), user["password"].encode()
+            ):
+                print("Login successful!")
+
+                if user["role"] == "Manager":
+                    inventory_manager = Manager(user)
+                    self.manager_menu(inventory_manager)
+                else:
+                    employee = Employee(user)
+                    self.employee_menu(employee)
+            else:
+                print("Incorrect password.")
+                choice = (
+                    input("Do you want to recover your password? (y/n): ")
+                    .strip()
+                    .lower()
+                )
+                if choice == "y":
+                    Login.password_recovery(login_data["email"])
+                else:
+                    print("Returning to main menu.")
+        except KeyError:
+            print("User not found.")
+
+    def manager_menu(self, inventory_manager):
+        """Menu for managers with CRUD permissions."""
+        print(f"\nWelcome, Manager {inventory_manager.user_data['first_name']}!")
+        while True:
+            print("\nManager Menu:")
+            print("1. Manage employees (CRUD)")
+            print("2. Manage inventory (CRUD)")
+            print("3. Logout")
+
+            choice = input("Enter your choice (1-4): ").strip()
+            if choice == "1":
+                self.manage_employees(inventory_manager)
+            elif choice == "2":
+                self.access_inventory(inventory_manager)
+            elif choice == "3":
+                print("Logging out...")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+
+    def manage_employees(self, inventory_manager):
+        """Manager CRUD menu for employees."""
+        print("\nEmployee Management Menu:")
+        print("1. Add an employee")
+        print("2. Update an employee")
+        print("3. Delete an employee")
+        print("4. Find an employee")
+        print("5. Assign an employee role")
+        print("6. Back to main menu")
+
+        choice = input("Enter your choice (1-6): ").strip()
+        if choice == "1":
+            inventory_manager.add_employee()
+        elif choice == "2":
+            inventory_manager.update_employee()
+        elif choice == "3":
+            inventory_manager.delete_employee()
+        elif choice == "4":
+            inventory_manager.find_employee()
+        elif choice == "5":
+            inventory_manager.assign_role()
+        elif choice == "6":
+            return
+        else:
+            print("Invalid choice. Returning to main menu.")
+
+    def access_inventory(self, inventory_manager):  
 
         while True:
             print("\nInventory Management System")
@@ -243,6 +317,4 @@ class Main:
 if __name__ == "__main__":
     main = Main()
     main.display_main_menu()
-
-
 

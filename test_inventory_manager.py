@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, mock_open
-from exercises.scr.inventory.inventory_manager import InventoryManager
+from inventory.inventory_manager import InventoryManager
 import json
 import os
 

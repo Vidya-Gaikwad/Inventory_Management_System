@@ -16,5 +16,11 @@
         "quantity": 500.0,
         "price": 10.0,
         "category": "Electronics"
+    },
+    "E232": {
+        "product_name": "Tablet101",
+        "quantity": 192.0,
+        "price": 327.957,
+        "category": "Electronics"
     }
 }

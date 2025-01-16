@@ -57,6 +57,66 @@
                 "zip_code": "35232",
                 "country": "Germany"
             }
+        },
+        "5": {
+            "first_name": "Dea",
+            "last_name": "Kent",
+            "birthday": "08.07.1978",
+            "email": "test2@test2.com",
+            "password": "$2b$12$hgQGTB67xu13ybC10TTDEuCxHpjiVjnVcGgex6Gk8aa6JW1oa8/Eu",
+            "phone_number": "+4546467474574",
+            "address": {
+                "street": "Ferlstr",
+                "house_number": "3",
+                "city": "Berlin",
+                "zip_code": "349384",
+                "country": "Germany"
+            }
+        },
+        "6": {
+            "first_name": "Mark",
+            "last_name": "Karl",
+            "birthday": "23.10.1978",
+            "email": "test3@test3.com",
+            "password": "$2b$12$OI.G7.tGKlb9/wcfPT5OMukLcGFWvWU3HvBPmQxdoiCRDB4B8vTly",
+            "phone_number": "+49123456789",
+            "address": {
+                "street": "Marcusstr",
+                "house_number": "3",
+                "city": "Berlin",
+                "zip_code": "345464",
+                "country": "Germany"
+            }
+        },
+        "7": {
+            "first_name": "",
+            "last_name": "Eli",
+            "birthday": "233.56.1879",
+            "email": "ezz",
+            "password": "$2b$12$/S0HDu9ZT070XEQ/9t9HAe1LlPEQoD2PLSTbZnQgC1b258fzWCWLS",
+            "phone_number": "657567",
+            "address": {
+                "street": "Z",
+                "house_number": "9",
+                "city": "Z",
+                "zip_code": "",
+                "country": ""
+            }
+        },
+        "8": {
+            "first_name": "Lisa",
+            "last_name": "Dell",
+            "birthday": "23.12.1978",
+            "email": "test4@test4.com",
+            "password": "$2b$12$zhcOHqniafkzQZBADbUi.uGdeQYmeW9o9kTjdqg.DLyhiwudgbMhe",
+            "phone_number": "+491245359586",
+            "address": {
+                "street": "Beligstr",
+                "house_number": "34",
+                "city": "Berlin",
+                "zip_code": "34345",
+                "country": "Germany"
+            }
         }
     }
 }
