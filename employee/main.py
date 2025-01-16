@@ -5,20 +5,6 @@ from manager import Manager
 from employee import Employee
 from validate_user import UserValidator, ValidationError
 
-# from Inventory_Management_System.inventory.inventory_manager import InventoryManager
-# from Inventory_Management_System.inventory.product import Product
-
-import sys
-import os
-
-# Add the inventory folder to the sys.path
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "inventory"))
-)
-
-import inventory_manager
-import product
-
 
 class Main:
     """Main program to manage the Inventory Manager system."""
@@ -26,6 +12,7 @@ class Main:
     def __init__(self):
         self.user_manager = UserManager()  # Manages user database
         self.user_validator = UserValidator()  # Validates user input
+        self.manager = None
 
     def display_main_menu(self):
         """Display the main menu."""
@@ -129,6 +116,10 @@ class Main:
                 break  # Exit from manager's menu and log out
             else:
                 print("Invalid choice. Please try again.")
+
+    def find_employee(self, email):
+        """Wrapper method to find an employee via Manager."""
+        self.manager.find_employee(email)
 
     def manage_employees(self, manager):
         """Manage Employees submenu."""
@@ -239,51 +230,6 @@ class Main:
                 print("Invalid choice. Please try again.")
                 continue
 
-            def update_address(self):
-                """Prompt the manager to update the address."""
-                print("\n........... Update Address ..........")
-
-                address_data = {}  # Initialize empty address data here
-
-                while True:
-                    print("\n........... Address Submenu ..........")
-                    print("1. Update Street")
-                    print("2. Update House Number")
-                    print("3. Update City")
-                    print("4. Update Zip Code")
-                    print("5. Update Country")
-                    print("6. Go Back")
-                    print("-" * 50)
-
-                    # Get user's choice for updating address
-                    choice = input(
-                        "Enter the number of the part of the address to update: "
-                    ).strip()
-
-                    if choice == "1":
-                        address_data["street"] = input("Enter the new Street: ").strip()
-                    elif choice == "2":
-                        address_data["house_number"] = input(
-                            "Enter the new House Number: "
-                        ).strip()
-                    elif choice == "3":
-                        address_data["city"] = input("Enter the new City: ").strip()
-                    elif choice == "4":
-                        address_data["zip_code"] = input(
-                            "Enter the new Zip Code: "
-                        ).strip()
-                    elif choice == "5":
-                        address_data["country"] = input(
-                            "Enter the new Country: "
-                        ).strip()
-                    elif choice == "6":
-                        break  # Go back to the main update menu
-                    else:
-                        print("Invalid choice. Please try again.")
-                        continue
-
-                    return address_data
-
         # Proceed to update the employee data
         if updated_data:
             try:
@@ -292,15 +238,46 @@ class Main:
             except Exception as e:
                 print(f"Error updating employee {email}: {str(e)}")
 
-    def delete_employee(self, manager):
-        """Delete an employee."""
-        email = input("Enter the email of the employee to delete: ")
-        manager.delete_employee(email)
+    def update_address(self):
+        """Prompt the manager to update the address."""
+        print("\n........... Update Address ..........")
 
-    def find_employee(self, manager):
-        """Find an employee."""
-        email = input("Enter the email of the employee to find: ")
-        manager.find_employee(email)
+        address_data = {}  # Initialize empty address data here
+
+        while True:
+            print("\n........... Address Submenu ..........")
+            print("1. Update Street")
+            print("2. Update House Number")
+            print("3. Update City")
+            print("4. Update Zip Code")
+            print("5. Update Country")
+            print("6. Go Back")
+            print("-" * 50)
+
+            # Get user's choice for updating address
+            choice = input(
+                "Enter the number of the part of the address to update: "
+            ).strip()
+
+            if choice == "1":
+                address_data["street"] = input("Enter the new Street: ").strip()
+            elif choice == "2":
+                address_data["house_number"] = input(
+                    "Enter the new House Number: "
+                ).strip()
+            elif choice == "3":
+                address_data["city"] = input("Enter the new City: ").strip()
+            elif choice == "4":
+                address_data["zip_code"] = input("Enter the new Zip Code: ").strip()
+            elif choice == "5":
+                address_data["country"] = input("Enter the new Country: ").strip()
+            elif choice == "6":
+                break  # Go back to the main update menu
+            else:
+                print("Invalid choice. Please try again.")
+                continue
+
+        return address_data
 
     def assign_employee_role(self, manager):
         """Assign a role to an employee."""
