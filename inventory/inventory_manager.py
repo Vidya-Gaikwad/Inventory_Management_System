@@ -86,7 +86,7 @@ class InventoryManager:
         pattern = r"^[A-Za-z]+[_\d\s-]*[A-Za-z\d]+$"
         # ex. 'iphone', 'Iphone10', 'iphone-10', 'iphone_10', 'my iphone' ..ect
 
-        category_list = ["Electronics", "electronics", "Furniture", "furniture", "Clothes", "clothes", "Footware", "footware"]
+        category_list = ["Electronics", "electronics", "Furniture", "furniture", "Clothes", "clothes", "Footwear", "footware"]
 
         if not (isinstance(product, Product)):
             raise TypeError("Type of product is not 'Product'")
@@ -167,6 +167,8 @@ class InventoryManager:
             elif category == "4":
                 filtered_category = list(filter(lambda x: x[1]["category"] == "Clothes", self.product_data.items()))
                 result = filtered_category
+            else:
+                print("Category not in list! Please enter no between (1 - 4)")
             return result
         except Exception as e:
             print(f"Error: {e}")

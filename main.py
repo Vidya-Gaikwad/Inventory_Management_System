@@ -78,7 +78,7 @@ while True:
             elif choice == "6":  # Goes back to main menu
                 submenu_1 = False
             else:
-                print("Invalid option")
+                print("Invalid option! Please Enter a no between (1 - 6)")
 
     elif choice == "2":
         submenu_2 = True
@@ -117,6 +117,8 @@ while True:
 
             elif choice == "3":  # Goes back to main menu
                 submenu_2 = False
+            else:
+                print("Invalid option! Please Enter a no between (1 - 3)")
 
     elif choice == "3":
         submenu_3 = True
@@ -178,7 +180,7 @@ while True:
             elif choice == "4":  # Goes back to main menu
                 submenu_3 = False
             else:
-                print("Invalid option!")
+                print("Invalid option! Please Enter a no between (1 - 4)")
 
     elif choice == "4":
         submenu_4 = True
@@ -201,8 +203,11 @@ while True:
                     print("No product found!")
             elif choice == "2":  # Provides a list of products with choosen category
                 products = manager.filter_product_by_category()
-                for items in products:
-                    print(f"Product_name: {items[1]['product_name']}--- Product_price: {items[1]['price']}")
+                if isinstance(products, list):
+                    for items in products:
+                        print(f"Product_name: {items[1]['product_name']}--- Product_price: {items[1]['price']}")
+                else:
+                    print("Category not found!")
             elif choice == "3":  # Provides a list of products with quantity less than 5
                 products_found = manager.filter_product_with_low_quantity()
                 try:
@@ -212,6 +217,9 @@ while True:
                     print("No need to update quantity of any product")
             elif choice == "4":  # Goes back to main menu
                 submenu_4 = False
+            else:
+                print("Invalid option! Please Enter a no between (1 - 4)")
+
     elif choice == "5":
         print("Exiting the Inventory Management System.")
         print("\n")
