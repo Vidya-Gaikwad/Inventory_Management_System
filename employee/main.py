@@ -4,6 +4,8 @@ from login import Login
 from manager import Manager
 from employee import Employee
 from validate_user import UserValidator, ValidationError
+import random
+import string
 
 
 class Main:
@@ -12,7 +14,7 @@ class Main:
     def __init__(self):
         self.user_manager = UserManager()  # Manages user database
         self.user_validator = UserValidator()  # Validates user input
-        self.manager = None
+        self.manager = None  # Initially, no manager is logged in
 
     def display_main_menu(self):
         """Display the main menu."""
@@ -41,10 +43,8 @@ class Main:
     def register_user(self):
         """Register a new user."""
         try:
-            registration = Registration(
-                self.user_manager, self.user_validator
-            )  # Create instance of Registration class
-            registration.register_user()  # Call register_user() on the instance
+            registration = Registration(self.user_manager, self.user_validator)
+            registration.register_user()
             print("Registration successful!")
         except ValueError as e:
             print(f"Error: {e}")
@@ -61,13 +61,13 @@ class Main:
                 return
 
             if user["role"] == "Manager":
-                manager = Manager(
+                self.manager = Manager(
                     user,
                     hiring_date=user.get("hiring_date"),
                     salary=user.get("salary"),
                     db_manager=self.user_manager,
                 )
-                self.manager_menu(manager)
+                self.manager_menu(self.manager)  # Now passing the initialized manager
             else:
                 employee = Employee(
                     user,
@@ -81,17 +81,12 @@ class Main:
 
     def forgot_password(self):
         """Handle forgot password scenario."""
-        email = input(
-            "Enter your email address: "
-        ).strip()  # Strip any extra whitespace
+        email = input("Enter your email address: ").strip()
 
-        # Check if the user exists in the database
         user_data = self.user_manager.find_user(email)
 
         if user_data:
             print(f"A password reset email has been sent to {email}.")
-            # Here, you can implement further actions for password recovery (e.g., reset link, etc.)
-            # For now, let's just simulate sending an email.
         else:
             print(f"No user found with that email address.")
 
@@ -113,13 +108,15 @@ class Main:
                 self.access_inventory(manager.inventory_manager)  # Access the inventory
             elif choice == "3":
                 print("Logging out...")
+                self.manager = None  # Log out the manager
                 break  # Exit from manager's menu and log out
             else:
                 print("Invalid choice. Please try again.")
 
-    def find_employee(self, email):
+    def find_employee(self, manager, email):
         """Wrapper method to find an employee via Manager."""
-        self.manager.find_employee(email)
+        if manager:
+            manager.find_employee(email)
 
     def manage_employees(self, manager):
         """Manage Employees submenu."""
@@ -143,7 +140,10 @@ class Main:
             elif choice == "3":
                 self.delete_employee(manager)
             elif choice == "4":
-                self.find_employee(manager)
+                email = input("Enter employee's email: ").strip()
+                self.find_employee(
+                    manager, email
+                )  # Now correctly passing manager to find_employee
             elif choice == "5":
                 self.assign_employee_role(manager)
             elif choice == "6":
@@ -151,27 +151,80 @@ class Main:
             else:
                 print("Invalid choice. Please try again.")
 
+    def generate_random_password(self, length=8):
+        """Generate a random password with at least 1 uppercase, 1 lowercase, and 1 special character."""
+        if length < 8:
+            raise ValueError("Password length must be at least 8 characters.")
+
+        # Define the character sets
+        uppercase_letters = string.ascii_uppercase
+        lowercase_letters = string.ascii_lowercase
+        special_characters = string.punctuation
+        digits = string.digits
+
+        # Ensure the password has at least 1 uppercase, 1 lowercase, and 1 special character
+        password = [
+            random.choice(uppercase_letters),
+            random.choice(lowercase_letters),
+            random.choice(special_characters),
+        ]
+
+        # Fill the remaining characters with a mix of all possible characters
+        all_characters = (
+            uppercase_letters + lowercase_letters + special_characters + digits
+        )
+        password += random.choices(all_characters, k=length - len(password))
+
+        # Shuffle the password list to ensure randomness
+        random.shuffle(password)
+
+        # Convert the list back to a string and return
+        return "".join(password)
+
     def add_employee(self, manager):
-        """Add a new employee."""
+        """Add a new employee with extended data."""
         first_name = input("Enter First Name: ").strip().casefold()
         last_name = input("Enter Last Name: ").strip().casefold()
         email = input("Enter Email: ").strip()
         phone_number = input("Enter Phone Number: ").strip()
-        address = input("Enter Address: ").casefold()
-        birthday = input("Enter Birthday(Format DD/MM/YYYY): ")
-        hiring_date = input("Enter Hiring Date(Format DD/MM/YYYY): ")
-        salary = float(input("Enter Salary: "))
+        birthday = input("Enter Birthday(Format DD/MM/YYYY): ").strip()
+        hiring_date = input("Enter Hiring Date(Format DD/MM/YYYY): ").strip()
+        salary = float(input("Enter Salary: ").strip())
+
+        # Collecting address details
+        print("\nAddress Information:")
+        street = input("Enter Street: ").strip()
+        house_number = input("Enter House Number: ").strip()
+        city = input("Enter City: ").strip()
+        zip_code = input("Enter Zip Code: ").strip()
+        country = input("Enter Country: ").strip()
+
+        # Generate a random provisional password
+        provisional_password = self.generate_random_password()
 
         employee_data = {
             "first_name": first_name,
             "last_name": last_name,
             "email": email,
+            "password": provisional_password,
             "phone_number": phone_number,
-            "address": address,
             "birthday": birthday,
-            "hiring_date": hiring_date,
-            "salary": salary,
+            "address": {
+                "street": street,
+                "house_number": house_number,
+                "city": city,
+                "zip_code": zip_code,
+                "country": country,
+            },
+            "role": "Employee",  # Default role as Employee
         }
+
+        # Simulate saving the employee data
+        print("\nEmployee added successfully!")
+        print(
+            f"Provisional password for {first_name} {last_name}: {provisional_password}"
+        )
+        return employee_data  # You may save this to your database here
 
         manager.add_employee(employee_data)
         print("Employee added successfully.")
