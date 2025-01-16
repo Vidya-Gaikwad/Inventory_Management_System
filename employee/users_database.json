@@ -35,5 +35,21 @@
         "birthday": "12/11/1990",
         "hiring_date": "04/05/2003",
         "salary": 2300.0
+    },
+    {
+        "first_name": "perla",
+        "last_name": "madrigal",
+        "email": "perla@e.com",
+        "password": "`D[Lhz|i",
+        "phone_number": "3348765000",
+        "birthday": "05/11/2000",
+        "address": {
+            "street": "Flores",
+            "house_number": "55",
+            "city": "Campinas",
+            "zip_code": "45000",
+            "country": "Brasil"
+        },
+        "role": "Logistics Employee"
     }
 ]

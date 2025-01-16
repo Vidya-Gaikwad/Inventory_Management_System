@@ -199,9 +199,30 @@ class Main:
         zip_code = input("Enter Zip Code: ").strip()
         country = input("Enter Country: ").strip()
 
+        # Role selection submenu
+        print("\nSelect Role for the employee:")
+        print("1. Manager")
+        print("2. Admin")
+        print("3. Logistics Employee")
+        print("4. Sales Employee")
+        role_choice = input("Enter your choice (1-4): ").strip()
+
+        if role_choice == "1":
+            role = "Manager"
+        elif role_choice == "2":
+            role = "Admin"
+        elif role_choice == "3":
+            role = "Logistics Employee"
+        elif role_choice == "4":
+            role = "Sales Employee"
+        else:
+            print("Invalid choice, defaulting to 'Employee'")
+            role = "Employee"  # Default role if the input is invalid
+
         # Generate a random provisional password
         provisional_password = self.generate_random_password()
 
+        # Create employee data dictionary
         employee_data = {
             "first_name": first_name,
             "last_name": last_name,
@@ -216,18 +237,20 @@ class Main:
                 "zip_code": zip_code,
                 "country": country,
             },
-            "role": "Employee",  # Default role as Employee
+            "role": role,  # Set the chosen role
         }
 
-        # Simulate saving the employee data
-        print("\nEmployee added successfully!")
-        print(
-            f"Provisional password for {first_name} {last_name}: {provisional_password}"
-        )
-        return employee_data  # You may save this to your database here
-
-        manager.add_employee(employee_data)
-        print("Employee added successfully.")
+        # Add the employee to the manager's database
+        try:
+            self.user_manager.add_user(
+                employee_data
+            )  # This saves the employee to the database
+            print("\nEmployee added successfully!")
+            print(
+                f"Provisional password for {first_name} {last_name}: {provisional_password}"
+            )
+        except UserExistsError as e:
+            print(f"Error: {e}")
 
     def update_employee(self, manager):
         """Update employee information."""
