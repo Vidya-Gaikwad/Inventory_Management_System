@@ -361,6 +361,36 @@ class Main:
         role = input("Enter the role to assign: ")
         manager.assign_role(email, role)
 
+    def delete_employee(self, manager):
+        """Delete an employee based on email."""
+        email = input("Enter the email of the employee you want to delete: ").strip()
+
+        # Find the employee in the database
+        employee = self.user_manager.find_user(email)
+
+        if not employee:
+            print(f"No employee found with email {email}.")
+            return
+
+        # Confirm before deleting
+        confirm = (
+            input(
+                f"Are you sure you want to delete {employee['first_name']} {employee['last_name']}? (y/n): "
+            )
+            .strip()
+            .lower()
+        )
+
+        if confirm == "y":
+            # Delete the employee
+            self.user_manager.users.remove(employee)
+            self.user_manager.save_users()  # Save the updated list of users
+            print(
+                f"Employee {employee['first_name']} {employee['last_name']} deleted successfully."
+            )
+        else:
+            print("Employee deletion cancelled.")
+
     def access_inventory(self, inventory_manager):
         """Inventory access and modification menu."""
         while True:
