@@ -4,7 +4,6 @@ from employee.registration import Registration
 from employee.users_database import UserManager, UserExistsError, UserNotFoundError
 from inventory.inventory_manager import InventoryManager
 from inventory.product import Product
-#import bcrypt
 
 class Main:
     def display_main_menu(self):  
