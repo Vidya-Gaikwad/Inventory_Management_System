@@ -107,7 +107,7 @@ class InventoryManager:
 
         self.product_data = self.read_product_data()
         for product_id, product in self.product_data.items():
-            if product_name == product["product_name"]:
+            if product_name.lower() == (product["product_name"]).lower():
                 return product
         else:
             return False
@@ -154,7 +154,7 @@ class InventoryManager:
         '''
         self.product_data = self.read_product_data()
         try:
-            category = input("Please enter your option for category\n1 -Electronics \n2 -Furniture \n3 -Footware \n4 -Clothes\nCategory: ").strip()
+            category = input("Please enter your option for category\n1 -Electronics \n2 -Furniture \n3 -Footwear \n4 -Clothes\nCategory: ").strip()
             if category == "1":
                 filtered_category = list(filter(lambda x: x[1]["category"] == "Electronics", self.product_data.items()))
                 result = filtered_category
@@ -162,7 +162,7 @@ class InventoryManager:
                 filtered_category = list(filter(lambda x: x[1]["category"] == "Furniture", self.product_data.items()))
                 result = filtered_category
             elif category == "3":
-                filtered_category = list(filter(lambda x: x[1]["category"] == "Footware", self.product_data.items()))
+                filtered_category = list(filter(lambda x: x[1]["category"] == "Footwear", self.product_data.items()))
                 result = filtered_category
             elif category == "4":
                 filtered_category = list(filter(lambda x: x[1]["category"] == "Clothes", self.product_data.items()))
