@@ -117,6 +117,36 @@
                 "zip_code": "34345",
                 "country": "Germany"
             }
+        },
+        "9": {
+            "first_name": "Rex",
+            "last_name": "Dave",
+            "birthday": "12.10.1978",
+            "email": "rex@dave.com",
+            "password": "$2b$12$OMU7MlYnTpu4qhjlidnGQOP7pJuL/cKCXbzP58LxA/AeTmrCsCIUi",
+            "phone_number": "+49182744856",
+            "address": {
+                "street": "Belzigstr",
+                "house_number": "4",
+                "city": "Berlin",
+                "zip_code": "108934",
+                "country": "Germany"
+            }
+        },
+        "10": {
+            "first_name": "Al",
+            "last_name": "Daz",
+            "birthday": "23/10/1978",
+            "email": "e@g.com",
+            "password": "$2b$12$nn2Xz6Mb86JeOjlT99xfw.R2aIidSlqeFtxwZYg87QdYktntchew.",
+            "phone_number": "+1763884738",
+            "address": {
+                "street": "Erstr",
+                "house_number": "3",
+                "city": "Berlin",
+                "zip_code": "234242",
+                "country": "Germany"
+            }
         }
     }
 }
