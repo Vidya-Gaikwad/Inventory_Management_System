@@ -147,6 +147,36 @@
                 "zip_code": "234242",
                 "country": "Germany"
             }
+        },
+        "11": {
+            "first_name": "Sal",
+            "last_name": "Mac",
+            "birthday": "23/02/1988",
+            "email": "r@g.com",
+            "password": "$2b$12$fzu3uiS7/o6P1coGy0I3SuL5Ii83o7aVCj3/6zHlHFDqJC/iNVbSS",
+            "phone_number": "+158473883744",
+            "address": {
+                "street": "Verstr",
+                "house_number": "3",
+                "city": "Berlin",
+                "zip_code": "3422",
+                "country": "Germany"
+            }
+        },
+        "12": {
+            "first_name": "Er",
+            "last_name": "Ev",
+            "birthday": "01/02/1956",
+            "email": "w@gg.com",
+            "password": "$2b$12$KvxlVtGvWcKFQ3wa7piql.YsV8vmNeFdCOkfgLun4uv2zYorJHfOm",
+            "phone_number": "+333",
+            "address": {
+                "street": "Gfer",
+                "house_number": "3",
+                "city": "Germ",
+                "zip_code": "3454353",
+                "country": "Germany"
+            }
         }
     }
 }
